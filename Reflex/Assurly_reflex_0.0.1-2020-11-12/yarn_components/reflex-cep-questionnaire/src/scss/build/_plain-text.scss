@@ -1,0 +1,25 @@
+.plain-question {
+
+	.plain-missing-answer {
+		font-style: italic;
+	}
+
+	.question-caption-annotation {
+		display: none;
+	}
+
+	.plain-struct .plain-question {
+		display: inline-block;
+		vertical-align: text-top;
+
+		.question-wrapper .question-content-wrapper {
+			margin: 0;
+			padding: 0;
+		}
+
+		.question-label {
+			margin: 0;
+			padding: 0;
+		}
+	}
+}

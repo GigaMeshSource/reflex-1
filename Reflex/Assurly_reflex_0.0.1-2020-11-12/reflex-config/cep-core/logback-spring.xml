@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--See http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+		<!--and http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy-->
+		<!--for further documentation-->
+		<file>${REFLEX_LOG_ROOTDIR}/cep-core.log</file>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${REFLEX_LOG_ROOTDIR}/cep-core.log.%d{yyyy-MM-dd}</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
+	<logger name="com.hannoverre.reflex.cep" level="INFO"/>
+	<logger name="com.hazelcast" level="WARN"/>
+	<logger name="com.hibernate" level="WARN"/>
+	<logger name="org.springframework" level="WARN"/>
+	<root level="ERROR">
+		<appender-ref ref="FILE"/>
+	</root>
+</configuration>

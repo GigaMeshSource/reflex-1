@@ -1,0 +1,39 @@
+.number-with-unit {
+	.input-group-addon, .input-group-btn .btn {
+		min-width: 4.5rem;
+	}
+
+}
+
+.unit-help-text {
+	margin-bottom: $padding-base-vertical / 2;
+}
+
+.tab-content {
+	border-left: 1px solid $nav-tabs-border-color;
+	padding: $padding-base-vertical $padding-base-horizontal;
+	border-top: 0;
+}
+
+.uib-tab.nav-item.disabled:not(.active) {
+	display: none; // hide other unit-tabs when question is readonly
+}
+
+.special-number-widget {
+	.short-answer {
+		margin-right: $padding-base-horizontal;
+	}
+}
+
+.special-number-widget {
+
+	.nested-validations .validation {
+		margin-top: $padding-base-horizontal;
+		margin-bottom: 0;
+	}
+
+	.first-input-wrapper {
+		margin-right: $padding-base-horizontal;
+	}
+
+}

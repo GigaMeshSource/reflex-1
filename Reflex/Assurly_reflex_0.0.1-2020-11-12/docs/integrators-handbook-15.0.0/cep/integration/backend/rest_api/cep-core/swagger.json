@@ -1,0 +1,1619 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "16.0.0",
+    "title" : "CEP Core Services"
+  },
+  "basePath" : "/cep-core",
+  "tags" : [ {
+    "name" : "Authorized"
+  }, {
+    "name" : "Integration"
+  }, {
+    "name" : "Internal"
+  } ],
+  "schemes" : [ "http", "https", "ws", "wss" ],
+  "paths" : {
+    "/assessment/{assessmentId}" : {
+      "get" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Loads and assesses the risk assessment questionnaire.",
+        "description" : "",
+        "operationId" : "getInitialData",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment id to load the assessment data from",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "lang",
+          "in" : "query",
+          "description" : "The language that should be used to assess the questionnaire (overrides the language from the provided data block).",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The assessment data as seen by the user.",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId."
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "No suitable knowledgebase found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Performs an assessment based on the given data.",
+        "description" : "",
+        "operationId" : "performAssessment",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "lang",
+          "in" : "query",
+          "description" : "the language that should be used (overrides the language from the provided data block).",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The data to be assessed.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RiskAssessment"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "if the assessment is not completed",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          },
+          "201" : {
+            "description" : "if the assessment is completed"
+          },
+          "400" : {
+            "description" : "The request was invalid",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorModel"
+            }
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId."
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "No suitable knowledgebase found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Stores an assessment without actually assessing it.",
+        "description" : "",
+        "operationId" : "sync",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "Id of assessment to sync.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The data to be assessed.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RiskAssessment"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Sync was successful."
+          },
+          "400" : {
+            "description" : "The request was invalid",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorModel"
+            }
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId."
+          }
+        }
+      }
+    },
+    "/assessment/{assessmentId}/observe" : {
+      "get" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Observes an assessment. Provides an SSE Endpoint that publishes all state updates for a given risk assessment.",
+        "description" : "",
+        "operationId" : "observe",
+        "produces" : [ "text/event-stream;charset=UTF-8", "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "access_token",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          }
+        }
+      }
+    },
+    "/assessment/{assessmentId}/requestAssistance" : {
+      "post" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Marks an assessment as available through the AWB.",
+        "description" : "",
+        "operationId" : "setRequestAssistance",
+        "consumes" : [ "application/json", "*/*" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "context",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/JsonNode"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          }
+        }
+      }
+    },
+    "/assessment/{assessmentId}/transferWriteAuthority" : {
+      "post" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Transfers the write authority for an assessment to the next participant.",
+        "description" : "",
+        "operationId" : "transferWriteAuthority",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          }
+        }
+      }
+    },
+    "/documents/{assessmentId}" : {
+      "get" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Creates a PDF document using the DCS (and the document template configured there) and returns it as data:application/pdf;base64. This Service can be used to provide the end-customer using CEP questionnaire with a link to download the PDF directly (via cep-pdf-link directive). For other (internal) uses (e.g. PDF Documents generated in back-office, please use the ReFlex DCS (Document Creation Service) directly. ",
+        "description" : "",
+        "operationId" : "createPDFDocument",
+        "produces" : [ "application/pdf" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encoded",
+          "in" : "query",
+          "description" : "encoded True, if the response should be Base64 encoded",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "doctype",
+          "in" : "query",
+          "description" : "The document template to use to create the PDF",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "filename",
+          "in" : "query",
+          "description" : "The document name template to use to name the PDF",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A response containing the pdf document as byte array and the Content-Disposition header set to 'attachment'.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string",
+                "format" : "byte"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/integration" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Method to prepare an assessment to be launched in the questionnaire.",
+        "description" : "",
+        "operationId" : "initializeAssessment",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "initialization",
+          "description" : "An AssessmentInitialization that contains all required information to prepare an assessment for later display in the questionnaire.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AssessmentInitialization"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "201" : {
+            "description" : "An IntegrationInfo consisting of all relevant information to redirect a user to the questionnaire.",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/resume" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : " Method to resume an suspended assessment.",
+        "description" : "",
+        "operationId" : "resumeAssessment",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The resume info of a previously suspended application",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ResumeInfo"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "IntegrationInfo object that can be used to redirect a user to the suspended questionnaire.",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "409" : {
+            "description" : "Conflict"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/resume/external" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : " Method to resume an externally suspended assessment.",
+        "description" : "",
+        "operationId" : "resumeExternalAssessment",
+        "consumes" : [ "application/jose" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The resume info of a previously suspended application",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "assertedAssessmentId",
+          "in" : "query",
+          "description" : "The assessmentId of the previously suspended application (optional, but recommended). A HTTP Response Code 400 will be returned if the assessmentId is provided but does not match the one stored in the suspended assessment to be resumed.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "IntegrationInfo object that can be used to redirect a user to the suspended questionnaire.",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/suspend/external/{assessmentId}" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Method to suspend an assessment externally.",
+        "description" : "",
+        "operationId" : "suspendExternalAssessment",
+        "produces" : [ "application/jose" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment that should be suspended",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "An encrypted risk assessment that can be used to resume the assessment at a later point in time.",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/suspend/internal/{assessmentId}" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Method to suspend an assessment internally.",
+        "description" : "",
+        "operationId" : "suspendAssessment",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The assessment that should be suspended",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "ResumeInfo that can be used to resume the assessment at a later point in time.",
+            "schema" : {
+              "$ref" : "#/definitions/ResumeInfo"
+            }
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/{assessmentId}" : {
+      "get" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Method to retrieve the current risk assessment data.",
+        "description" : "",
+        "operationId" : "getAssessmentData",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The id of the risk assessment to retrieve.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The current state of the riskAssessment",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Appends provided data to a risk assessment and returns the reassessed current state of the assessment.",
+        "description" : "",
+        "operationId" : "appendProvidedData",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "Id of an active assessment.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The provided data to be appended.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ProvidedData"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Provided data block has been appended.",
+            "schema" : {
+              "$ref" : "#/definitions/RiskAssessment"
+            }
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId."
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Internal" ],
+        "summary" : "Method to overwrite an existing assessment.",
+        "description" : "",
+        "operationId" : "putAssessment",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The id of the risk assessment to overwrite.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/RiskAssessment"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "if the placement of the riskassessment was successful"
+          },
+          "409" : {
+            "description" : "if there is already an assessment with the given assessmentId"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Method to delete risk assessment data for a given assessmentId from the CEP.",
+        "description" : "",
+        "operationId" : "delete",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The id of the risk assessment to delete.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "The assessment has been deleted"
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/{assessmentId}/copy" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Creates a copy of the assessment with the given assessmentId and the new product selection. Returns an IntegrationInfo that can be used to redirect the user to the questionnaire. The assessment is created for the same subject as the original assessment.",
+        "description" : "",
+        "operationId" : "copy",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The id of the risk assessment that should be the base for this copy.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The update applied to the given assessment.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RiskAssessmentUpdate"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "if the copied assessment is not completed",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "201" : {
+            "description" : "if the copied assessment is completed",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/{assessmentId}/grant/{role}/{subject}" : {
+      "put" : {
+        "tags" : [ "Internal" ],
+        "summary" : "Sets a subject for a given role in a assessment.",
+        "description" : "",
+        "operationId" : "grantPermission",
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "Id of an active assessment.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "role",
+          "in" : "path",
+          "description" : "Name of the role.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "subject",
+          "in" : "path",
+          "description" : "Subject of the entity given permission.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Permission has been given."
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId."
+          }
+        }
+      }
+    },
+    "/integration/{assessmentId}/renewToken" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Method to create a new IntegrationInfo for an existing assessment.",
+        "description" : "",
+        "operationId" : "renewToken",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The id of the risk assessment to retrieve a new token for. May be used to create a new token if the user token is expired.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "201" : {
+            "description" : "An IntegrationInfo consisting of all relevant information to redirect a user to the questionnaire. It only creates a token and cookies if the initial assessment initialization did not contain an external subject.",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationInfo"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "description" : "No assessment for the given assessmentId"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/integration/{assessmentId}/update" : {
+      "post" : {
+        "tags" : [ "Integration" ],
+        "summary" : "Changes the productSelection for a given assessmentId. This endpoint MUST NOT BE USED while the user is filling out the questionnaire.",
+        "description" : "",
+        "operationId" : "update",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "assessmentId",
+          "in" : "path",
+          "description" : "The id of the risk assessment that should be updated.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The update applied to the given assessment.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RiskAssessmentUpdate"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "if the assessment is completed"
+          },
+          "204" : {
+            "description" : "if the assessment is not completed"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "Bad Gateway"
+          }
+        }
+      }
+    },
+    "/search/{kbId}/{kbVersion}/{questionId}" : {
+      "get" : {
+        "tags" : [ "Authorized", "Internal" ],
+        "summary" : "Performs a (context sensitive) search.",
+        "description" : "",
+        "operationId" : "search",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "cookie",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "kbId",
+          "in" : "path",
+          "description" : "Id of the knowledgebase to search in",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "kbVersion",
+          "in" : "path",
+          "description" : "Version of the knowledgebase identified by 'kbId' to search in",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "questionId",
+          "in" : "path",
+          "description" : "id of the question that triggers the search",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "assessmentId",
+          "in" : "query",
+          "description" : "id of the assessment to load from storage",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "language",
+          "in" : "query",
+          "description" : "The language to search in",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "q",
+          "in" : "query",
+          "description" : "The search query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Search result based on given search parameter",
+            "schema" : {
+              "$ref" : "#/definitions/AssessmentFactorSearchResult"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "When a context sensitive search cannot find a questionnaire"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "502" : {
+            "description" : "No suitable knowledgebase found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Answer" : {
+      "type" : "object",
+      "properties" : {
+        "answer" : {
+          "type" : "object",
+          "description" : "The actual answer object. The format depends on the type of the question."
+        },
+        "overwriteMode" : {
+          "type" : "string",
+          "description" : "The overwrite mode for this provided answer. Defaults to 'overwrite-none'.",
+          "enum" : [ "overwrite-own", "overwrite-all", "overwrite-none" ]
+        }
+      },
+      "description" : "The data for an answer to a question given in a questionnaire section of a provided data block."
+    },
+    "AnswerModificationInfo" : {
+      "type" : "object",
+      "properties" : {
+        "source" : {
+          "type" : "string",
+          "description" : "The source of the modification, indicating who modified the answer."
+        },
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "The timestamp at which the answer was modified."
+        }
+      },
+      "description" : "Information about the modification of an answer given to a question. It is recorded who modified the answer and when it was modified the last time."
+    },
+    "ApplicationMeta" : {
+      "type" : "object",
+      "properties" : {
+        "cep" : {
+          "$ref" : "#/definitions/Cep"
+        }
+      }
+    },
+    "AssessmentFactor" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The globally unique ID of this assessment-factor."
+        },
+        "label" : {
+          "type" : "string",
+          "description" : "The text with which this assessment-factor is to be presented."
+        },
+        "inferred" : {
+          "type" : "boolean",
+          "description" : "A flag, indicating whether this assessment-factors has been automatically inferred by the RAS engine."
+        },
+        "addedBySearchVariable" : {
+          "type" : "boolean",
+          "description" : "A flag, indicating whether this assessment factor has been added by the RAS engine because it was selected in a search question."
+        },
+        "category" : {
+          "type" : "string",
+          "description" : "The ID of the assessment category that this assessment-factor belongs to."
+        }
+      },
+      "description" : "An assessment-factor, representing a risk that needs to be considered during a risk assessment."
+    },
+    "AssessmentFactorSearchResult" : {
+      "type" : "object",
+      "properties" : {
+        "results" : {
+          "type" : "array",
+          "description" : " A result of an assessment-factor search.",
+          "items" : {
+            "$ref" : "#/definitions/AssessmentFactor"
+          }
+        }
+      },
+      "description" : "A result of an assessment-factor search."
+    },
+    "AssessmentInitialization" : {
+      "type" : "object",
+      "required" : [ "language" ],
+      "properties" : {
+        "language" : {
+          "type" : "string",
+          "description" : "The language code that should be used for this assessment. The specified language must be supported by the knowledgebase for the given product."
+        },
+        "subject" : {
+          "type" : "string",
+          "description" : "The subject that should be used to authorize a user token against this assessment. If this field is left empty, the CEP will create a token that can only be used for this assessment and return it in the IntegrationInfo.cookies object."
+        },
+        "provided" : {
+          "$ref" : "#/definitions/ProvidedData"
+        },
+        "paginationMode" : {
+          "type" : "string",
+          "description" : "The paginationMode that should be used to display the assessment questionnaire in the Browser. Defaults to 'Questionnaire'",
+          "enum" : [ "Questionnaire", "QuestionGroup" ]
+        }
+      },
+      "description" : "A model for all data required to initialize an assessment."
+    },
+    "AssessmentResults" : {
+      "type" : "object",
+      "properties" : {
+        "products" : {
+          "type" : "array",
+          "description" : "The results for the insurance products for which a risk assessment was requested.",
+          "items" : {
+            "$ref" : "#/definitions/ProductResult"
+          }
+        }
+      },
+      "description" : "Results for an RiskAssessment"
+    },
+    "Cep" : {
+      "type" : "object",
+      "properties" : {
+        "autoSubmit" : {
+          "type" : "boolean"
+        },
+        "callbackUrl" : {
+          "type" : "string"
+        },
+        "permissions" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "activeRole" : {
+          "type" : "string"
+        },
+        "providedSubject" : {
+          "type" : "boolean"
+        },
+        "ui" : {
+          "$ref" : "#/definitions/Ui"
+        }
+      },
+      "description" : "Model for meta data from the cep."
+    },
+    "ErrorModel" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "location" : {
+          "$ref" : "#/definitions/LocationModel"
+        },
+        "validations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ValidationError"
+          }
+        },
+        "exception" : {
+          "$ref" : "#/definitions/ExceptionModel"
+        }
+      },
+      "description" : "A generic model for server side error descriptions. Verbosity can be configured via 'com.hannoverre.reflex.cep.util.mvc.errors.detailedErrorResponse' configuration"
+    },
+    "ExceptionModel" : {
+      "type" : "object",
+      "properties" : {
+        "exceptionClass" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "cause" : {
+          "$ref" : "#/definitions/ExceptionModel"
+        },
+        "stackTrace" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StackTraceModel"
+          }
+        }
+      }
+    },
+    "IntegrationInfo" : {
+      "type" : "object",
+      "required" : [ "assessmentId" ],
+      "properties" : {
+        "token" : {
+          "type" : "string"
+        },
+        "assessmentId" : {
+          "type" : "string"
+        },
+        "forwardUrl" : {
+          "type" : "string",
+          "description" : "Deprecated: Use directUrl instead."
+        },
+        "directUrl" : {
+          "type" : "string"
+        },
+        "language" : {
+          "type" : "string"
+        },
+        "cookies" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "description" : "Model for a token returned by POST /integration (AssessmentInitialization)."
+    },
+    "JsonNode" : {
+      "type" : "object",
+      "properties" : {
+        "float" : {
+          "type" : "boolean"
+        },
+        "short" : {
+          "type" : "boolean"
+        },
+        "nodeType" : {
+          "type" : "string",
+          "enum" : [ "ARRAY", "BINARY", "BOOLEAN", "MISSING", "NULL", "NUMBER", "OBJECT", "POJO", "STRING" ]
+        },
+        "array" : {
+          "type" : "boolean"
+        },
+        "null" : {
+          "type" : "boolean"
+        },
+        "number" : {
+          "type" : "boolean"
+        },
+        "int" : {
+          "type" : "boolean"
+        },
+        "valueNode" : {
+          "type" : "boolean"
+        },
+        "containerNode" : {
+          "type" : "boolean"
+        },
+        "missingNode" : {
+          "type" : "boolean"
+        },
+        "object" : {
+          "type" : "boolean"
+        },
+        "pojo" : {
+          "type" : "boolean"
+        },
+        "integralNumber" : {
+          "type" : "boolean"
+        },
+        "floatingPointNumber" : {
+          "type" : "boolean"
+        },
+        "long" : {
+          "type" : "boolean"
+        },
+        "double" : {
+          "type" : "boolean"
+        },
+        "bigDecimal" : {
+          "type" : "boolean"
+        },
+        "bigInteger" : {
+          "type" : "boolean"
+        },
+        "textual" : {
+          "type" : "boolean"
+        },
+        "boolean" : {
+          "type" : "boolean"
+        },
+        "binary" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Link" : {
+      "type" : "object",
+      "properties" : {
+        "href" : {
+          "type" : "string",
+          "description" : "The link URI"
+        },
+        "rel" : {
+          "type" : "array",
+          "description" : "An array of strings describing the semantics of the resource",
+          "items" : {
+            "$ref" : "#/definitions/Rel"
+          }
+        },
+        "method" : {
+          "type" : "string",
+          "description" : "The HTTP method"
+        }
+      }
+    },
+    "LocationModel" : {
+      "type" : "object",
+      "properties" : {
+        "charOffset" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "line" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "column" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "Meta" : {
+      "type" : "object",
+      "properties" : {
+        "cep" : {
+          "$ref" : "#/definitions/Cep"
+        }
+      }
+    },
+    "Product" : {
+      "type" : "object",
+      "required" : [ "id" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The id reference of the product."
+        },
+        "caption" : {
+          "type" : "string",
+          "description" : "The translated name of the product."
+        },
+        "constraints" : {
+          "description" : "The constraints of the product.",
+          "$ref" : "#/definitions/ProductConstraints"
+        },
+        "riders" : {
+          "type" : "array",
+          "description" : "The riders of the product.",
+          "items" : {
+            "$ref" : "#/definitions/Rider"
+          }
+        }
+      },
+      "description" : "Model for a Product as it is represented in the knowledge base."
+    },
+    "ProductConstraints" : {
+      "type" : "object",
+      "properties" : {
+        "minimumAge" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The minimum age."
+        },
+        "maximumAge" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The maximum age."
+        },
+        "minimumAgeAtExpiration" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The minimum age at expiration."
+        },
+        "maximumAgeAtExpiration" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The maximum age at expiration."
+        },
+        "minDuration" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The minimal duration."
+        },
+        "maxDuration" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The maximal duration."
+        },
+        "minSumInsured" : {
+          "type" : "number",
+          "description" : "The insured minimal sum."
+        },
+        "maxSumInsured" : {
+          "type" : "number",
+          "description" : "The insured maximal sum."
+        }
+      }
+    },
+    "ProductData" : {
+      "type" : "object",
+      "properties" : {
+        "riders" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/RiderData"
+          }
+        }
+      },
+      "description" : "Model for a product. The full specification with all available fields is available in the RMW Media-Types / Provided Products documentation."
+    },
+    "ProductResult" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The ID of the product for which this result was created."
+        }
+      }
+    },
+    "ProvidedData" : {
+      "type" : "object",
+      "properties" : {
+        "source" : {
+          "description" : "Information specifying the source that provided the data-block, as well as additional meta-data related to the source.",
+          "$ref" : "#/definitions/Source"
+        },
+        "products" : {
+          "type" : "object",
+          "description" : "Products and riders selected by the source, as well as their optional attributes.",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ProductData"
+          }
+        },
+        "links" : {
+          "type" : "array",
+          "description" : "Links identifying other resources",
+          "items" : {
+            "$ref" : "#/definitions/Link"
+          }
+        },
+        "questionnaire" : {
+          "type" : "object",
+          "description" : "Provided data that is potentially relevant for the risk assessment and therefore may be mapped to answer \n     * questions contained in a Questionnaire.",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/Answer"
+          }
+        },
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "kbId" : {
+          "type" : "string",
+          "description" : "ID of the Knowledgebase which is in charge for the product"
+        },
+        "kbVersion" : {
+          "type" : "string",
+          "description" : "Version of the Knowledgebase which is in charge for the product"
+        }
+      },
+      "description" : "A block of data that has been provided by an external source."
+    },
+    "Question" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The globally unique ID of this questionnaire element."
+        },
+        "caption" : {
+          "type" : "string",
+          "description" : "The text to be displayed for this questionnaire element."
+        },
+        "isNew" : {
+          "type" : "boolean",
+          "description" : "The flag is its a new question or not"
+        },
+        "answer" : {
+          "type" : "object",
+          "description" : "The answer of this questionnaire element. The type of this field depends on the questions type."
+        },
+        "answerModification" : {
+          "description" : "Information about the modification of the answer given to this question.",
+          "$ref" : "#/definitions/AnswerModificationInfo"
+        },
+        "answerState" : {
+          "type" : "string",
+          "description" : "The answering state of the question, specifying whether an answer was given - and if it was given whether it is valid or invalid. Possible states and transition between states apply according to the state model shown in the following diagram.",
+          "enum" : [ "absent", "missing", "valid", "invalid", "incomplete" ]
+        },
+        "assignedTo" : {
+          "type" : "string",
+          "description" : "The role to which the question is assigned to, indicating who is intended to answer this question."
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "The type of this questionnaire element."
+        },
+        "declarativeStatements" : {
+          "type" : "array",
+          "description" : "A list of declarative statements for this question. Declarative statements are only supported for 'valid' risk assessments. In case of a validation failure (invalid risk assessment) no declarative statements are delivered.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "questions" : {
+          "type" : "array",
+          "description" : "The child elements directly contained in this questionnaire element.",
+          "items" : {
+            "$ref" : "#/definitions/Question"
+          }
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "The nested questions that this structure contains.",
+          "items" : {
+            "$ref" : "#/definitions/Question"
+          }
+        },
+        "messages" : {
+          "type" : "array",
+          "description" : "A list of possible validation/conflict messages for this question.",
+          "items" : {
+            "$ref" : "#/definitions/ValidationMessage"
+          }
+        },
+        "scope" : {
+          "type" : "string",
+          "description" : "The logical scope that this questionnaire element is defined in."
+        },
+        "searchContextQuestions" : {
+          "type" : "array",
+          "description" : "If this Question is a context sensitive assessment factor search question, this field will be filled with the context question ids.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "searchId" : {
+          "type" : "string",
+          "description" : "The ID of this question that must be specified when searching for assessment factors that are to be added as\n* answers to this question."
+        },
+        "meta" : {
+          "$ref" : "#/definitions/Meta"
+        },
+        "unit" : {
+          "type" : "string",
+          "description" : "The optional unit of this (number) question."
+        },
+        "initialAnswerByProductChange" : {
+          "type" : "boolean",
+          "description" : "Indicating if the answer for the question has been initially set by performing a product change request"
+        }
+      },
+      "description" : "Model for a Question in a Questionnaire. This type may required further fields that are relevant for the RAS."
+    },
+    "Questionnaire" : {
+      "type" : "object",
+      "properties" : {
+        "questions" : {
+          "type" : "array",
+          "description" : "The elements directly contained in this questionnaire.",
+          "items" : {
+            "$ref" : "#/definitions/Question"
+          }
+        },
+        "meta" : {
+          "$ref" : "#/definitions/Meta"
+        }
+      }
+    },
+    "Rel" : {
+      "type" : "object",
+      "description" : "A string describing the semantic meaning of a link. Examples: 'self', 'process-riskassessments', 'translations', 'search-products', 'search-assessmentfactors', 'change-products' and 'search-other'"
+    },
+    "ResumeInfo" : {
+      "type" : "object",
+      "required" : [ "resumeId", "resumeToken" ],
+      "properties" : {
+        "resumeId" : {
+          "type" : "string"
+        },
+        "resumeToken" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Model for a resume token"
+    },
+    "Rider" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The id reference of the product."
+        },
+        "caption" : {
+          "type" : "string",
+          "description" : "The translated name of the product."
+        },
+        "constraints" : {
+          "description" : "The constraints of the product.",
+          "$ref" : "#/definitions/ProductConstraints"
+        }
+      }
+    },
+    "RiderData" : {
+      "type" : "object",
+      "properties" : {
+        "attributes" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        }
+      }
+    },
+    "RiskAssessment" : {
+      "type" : "object",
+      "properties" : {
+        "questionnaire" : {
+          "description" : "The questionnaire, containing questions to be asked and answered during a risk assessment, as well as elements used for structuring the questions.",
+          "$ref" : "#/definitions/Questionnaire"
+        },
+        "products" : {
+          "type" : "array",
+          "description" : "The selected products for which a risk assessment is to be performed.",
+          "items" : {
+            "$ref" : "#/definitions/Product"
+          }
+        },
+        "completed" : {
+          "type" : "boolean",
+          "description" : "A flag, indicating if the risk assessment is completed. A risk assessment is considered to be completed if all required questions have been validly answered and there are no validation errors for products (i.e. the valid flag is true)."
+        },
+        "meta" : {
+          "description" : "The optional meta data applied to the risk profile.",
+          "$ref" : "#/definitions/ApplicationMeta"
+        },
+        "results" : {
+          "description" : "The results of the risk assessment.",
+          "$ref" : "#/definitions/AssessmentResults"
+        },
+        "provided" : {
+          "type" : "array",
+          "description" : "Data provided by external sources that is relevant for a risk assessment and should be automatically processed.",
+          "items" : {
+            "$ref" : "#/definitions/ProvidedData"
+          }
+        },
+        "language" : {
+          "type" : "string",
+          "description" : "The language used for performing the risk assessment. All data in the risk profile that have translations will be translated in this language. The language is a required property that must be specified by clients. The language is a string that must conform to the following pattern."
+        },
+        "links" : {
+          "type" : "array",
+          "description" : "The optional hypermedia links provided by the REST resource that processed / provided the risk profile.",
+          "items" : {
+            "$ref" : "#/definitions/Link"
+          }
+        }
+      }
+    },
+    "RiskAssessmentUpdate" : {
+      "type" : "object",
+      "required" : [ "productSelection" ],
+      "properties" : {
+        "productSelection" : {
+          "type" : "object",
+          "description" : "A new product selection.",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ProductData"
+          }
+        }
+      },
+      "description" : "An update that should be applied to an existing riskAssessment."
+    },
+    "Source" : {
+      "type" : "object",
+      "required" : [ "id" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "The ID of the source. This ID should be unique for all blocks of provided data contained in a risk assessment."
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "The type of the source. This type should specify the general type of entity (role, system, ...) that provided the data."
+        },
+        "meta" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        },
+        "callbackUrl" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StackTraceModel" : {
+      "type" : "object",
+      "properties" : {
+        "className" : {
+          "type" : "string"
+        },
+        "fileName" : {
+          "type" : "string"
+        },
+        "lineNumber" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "methodName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Ui" : {
+      "type" : "object",
+      "properties" : {
+        "paginationMode" : {
+          "type" : "string"
+        },
+        "groupId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Model for questionnaire specific configuration."
+    },
+    "ValidationError" : {
+      "type" : "object",
+      "properties" : {
+        "objectName" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ValidationMessage" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "The text of the message."
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "The type of the message.",
+          "enum" : [ "ERROR", "WARNING", "INFO" ]
+        }
+      }
+    }
+  }
+}

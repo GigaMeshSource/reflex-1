@@ -1,0 +1,73 @@
+.question-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+
+	.question-label-wrapper {
+		width: 100%;
+	}
+
+	.question-content-wrapper {
+		padding-top: $padding-base-vertical;
+		width: 100%;
+	}
+
+	&.large .question-content-wrapper {
+		margin-right: 0;
+		width: 100%;
+	}
+
+	.question-annotation-wrapper {
+		width: 100%;
+		.annotation.hint {
+			margin-top: $padding-base-vertical;
+		}
+	}
+
+	.question-validation-wrapper {
+		padding-top: $padding-base-vertical;
+		flex-grow: 1;
+	}
+}
+
+//default: "below"
+.has-error,
+.has-info,
+.has-warning {
+	.question-content-wrapper {
+		margin-bottom: $padding-base-vertical;
+	}
+}
+
+//validation positions
+@media (min-width: $screen-md) {
+	@if $validation-position == "aside" {
+		.question-wrapper .question-content-wrapper {
+			width: auto;
+		}
+		.has-error,
+		.has-info,
+		.has-warning {
+			.question-content-wrapper {
+				margin-right: $padding-base-horizontal;
+				margin-bottom: 0;
+			}
+		}
+	}
+	@if $validation-position == "above" {
+		.question-wrapper .question-content-wrapper {
+			order: 1;
+		}
+		.has-error,
+		.has-info,
+		.has-warning {
+			.question-content-wrapper {
+				margin-top: $padding-base-vertical;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+.question-template {
+	margin-bottom: $space-between-questions;
+}

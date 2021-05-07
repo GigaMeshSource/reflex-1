@@ -1,0 +1,14 @@
+.question-label {
+	margin-top: $padding-base-vertical;
+	margin-bottom: $padding-base-vertical;
+
+	.question-index {
+		margin-right: $padding-xs-horizontal;
+	}
+	.question-caption {
+		display: inline;
+	}
+	.question-subtext {
+		display: block;
+	}
+}

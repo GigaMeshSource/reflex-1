@@ -1,0 +1,81 @@
+.question-table {
+
+	.question-table-row-wrapper {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.question-table-row {
+		flex-grow: 1;
+		vertical-align: top;
+
+	}
+
+	.question-table-header {
+		border: 1px solid $gray-lighter;
+		border-radius: $border-radius-base $border-radius-base 0 0;
+		border-bottom: none;
+		.question-table-row-control {
+			opacity: 0;
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+		.question-table-cell {
+			vertical-align: bottom;
+		}
+	}
+
+	.question-table-cell {
+		display: inline-block;
+		position: relative;
+		vertical-align: top;
+		padding: 0 $padding-base-horizontal;
+
+		.question-wrapper .question-content-wrapper {
+			width: 100%;
+			order: 0;
+		}
+		.question-wrapper .question-annotation-wrapper {
+			order: 2; // see widget-product:5.19 hints in tables BELOW the input
+		}
+
+		.has-error {
+			.question-content-wrapper {
+				margin-right: 0;
+				margin-bottom: $padding-base-vertical;
+			}
+		}
+
+		.short-input {
+			width: 100%;
+		}
+
+		.unicorn-search {
+			min-width: 0;
+		}
+
+		.remove-optional-answer-btn {
+			margin-left: 0;
+		}
+	}
+
+	.question-table-row-control {
+		padding: $padding-base-vertical $padding-base-horizontal;
+	}
+
+	.question-table-content {
+		border: 1px solid $gray-lighter;
+		padding-top: $padding-base-vertical;
+
+		.question-template {
+			margin-bottom: $padding-base-vertical;
+		}
+	}
+
+	.question-table-control {
+		border: 1px solid $gray-lighter;
+		border-radius: 0 0 $border-radius-base $border-radius-base;
+		border-top: none;
+		padding: $padding-base-vertical $padding-base-horizontal;
+	}
+}

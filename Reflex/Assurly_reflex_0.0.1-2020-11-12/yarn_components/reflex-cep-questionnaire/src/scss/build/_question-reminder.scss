@@ -1,0 +1,54 @@
+.question-reminder.popover {
+	position: fixed;
+	right: $padding-base-vertical;
+	top: $padding-base-horizontal;
+	left: auto;
+	&.in {
+		display: block;
+	}
+	max-width: 200px;
+
+	&.minimized {
+		cursor: pointer;
+		.hide-if-minimized {
+			display: none;
+		}
+	}
+
+	&:not(.minimized) {
+		.hide-if-maximized {
+			display: none;
+		}
+	}
+
+}
+
+@media (max-width: $screen-xs) {
+	.question-reminder.popover {
+		.arrow {
+			display: none;
+		}
+		border-radius: 0;
+		border-top: none;
+		border-left: none;
+		border-right: none;
+		width: 100%;
+		max-width: initial;
+		margin-top: 0;
+		left: 0;
+		right: 0;
+		top: 0;
+
+		button.minimizer {
+			display: none;
+		}
+
+		p {
+			display: inline;
+			margin: 0;
+			&.with-button {
+				text-align: right;
+			}
+		}
+	}
+}

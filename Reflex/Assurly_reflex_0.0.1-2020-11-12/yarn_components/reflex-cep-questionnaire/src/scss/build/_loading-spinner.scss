@@ -1,0 +1,105 @@
+@-webkit-keyframes cep-spinner-rotate {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-moz-keyframes cep-spinner-rotate {
+	from {
+		-moz-transform: rotate(0deg);
+	}
+	to {
+		-moz-transform: rotate(360deg);
+	}
+}
+
+@keyframes cep-spinner-rotate {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@if not($questionnaire-suppress-backdrop-styling) {
+	.loader {
+		top: 0;
+		right: 0;
+		height: 100%;
+		width: 100%;
+		z-index: $questionnaire-spinner-z-index;
+		background-color: $questionnaire-backdrop-color;
+
+		&.fullpage-backdrop {
+			position: fixed;
+		}
+
+		&.questionnaire-backdrop {
+			position: absolute;
+			text-align: center;
+		}
+	}
+}
+
+@if not($questionnaire-suppress-spinner-styling) {
+	.loader {
+
+		&.questionnaire-backdrop .spinner {
+			position: fixed;
+			top: 50%;
+		}
+
+		.spinner {
+			position: fixed;
+			top: 50vh;
+			left: 50vw;
+			z-index: $questionnaire-spinner-z-index;
+
+			width: $questionnaire-spinner-size;
+			height: $questionnaire-spinner-size;
+
+			margin-top: -($questionnaire-spinner-size/2);
+			margin-left: -($questionnaire-spinner-size/2);
+
+			border-width: $questionnaire-spinner-size / 8;
+			display: inline-block;
+			border-color: $questionnaire-spinner-color-alt;
+			border-style: solid;
+			border-right-color: $questionnaire-spinner-color;
+			border-radius: 50%;
+
+			animation-name: cep-spinner-rotate;
+			animation-duration: $questionnaire-spinner-speed;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+		}
+	}
+}
+
+// Annotation
+
+.spinner-annotation {
+	z-index: $questionnaire-spinner-z-index;
+	margin-top: 37.5px;
+	padding-top: 20px;
+	width: 100%;
+	text-align: center;
+	left: 0;
+
+	.alert {
+		width: auto;
+		display: inline-block;
+	}
+}
+.questionnaire-backdrop .spinner-annotation {
+	position: fixed;
+	top: 50%;
+}
+.fullpage-backdrop .spinner-annotation {
+	position: fixed;
+	top: 50vh;
+}

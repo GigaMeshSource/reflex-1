@@ -1,0 +1,36 @@
+//https://developer.mozilla.org/de/docs/Web/CSS/:invalid
+:invalid {
+	box-shadow: none;
+}
+
+:-moz-submit-invalid {
+	box-shadow: none;
+}
+
+:-moz-ui-invalid {
+	box-shadow:none;
+}
+
+//fix ipad date input widgets (http://stackoverflow.com/a/16853529)
+input[type="date"], input[type="month"] {
+	line-height: $input-height-base - (2 * $padding-base-vertical);
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+.short-input {
+	width: $short-input-width;
+	display: inline-block;
+	vertical-align: top;
+}
+
+// on devices: small inputs are 100%
+@media (max-width: $screen-xs) {
+	.short-input {
+		width: 100%;
+	}
+}
+
+.form-group {
+	margin-bottom: 0;
+}

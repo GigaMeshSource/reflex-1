@@ -1,0 +1,81 @@
+@import "bootstrap-rtl-ondemand-v3.3.4";
+
+.question-label {
+	.question-index {
+		margin-right: 0;
+		margin-left: $padding-xs-horizontal;
+	}
+}
+
+.tab-content {
+	margin-right: -2px;
+}
+.input-group-addon:last-child {
+	border-left-color: $input-group-addon-border-color;
+}
+.has-error .input-group-addon:last-child {
+	border-left-color: $btn-danger-border;
+}
+
+//fix direction of datepicker icons
+.uib-datepicker {
+	.uib-right i.glyphicon.glyphicon-chevron-right:before {
+		content: "\e079";
+	}
+	.uib-left i.glyphicon.glyphicon-chevron-left:before {
+		content: "\e080";
+	}
+}
+
+.unicorn-search {
+	.unicorn-search__inner {
+		.unicorn-search__input {
+			margin-left: 0;
+			margin-right: 6px;
+		}
+
+		.unicorn-chips {
+			.unicorn-chips__chip {
+				padding-left: 0;
+				padding-right: 8px;
+			}
+		}
+	}
+}
+
+.timepicker-inner {
+	padding-right: 2px;
+}
+
+.type-date {
+	.uib-datepicker-popup.dropdown-menu {
+		left: 0 !important;
+		right: auto !important;
+	}
+}
+
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group > .btn, .input-group-btn:last-child > .dropdown-toggle, .input-group-btn:first-child > .btn:not(:first-child), .input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
+	border-bottom-left-radius: $border-radius-base;
+	border-bottom-right-radius: 0;
+	border-top-left-radius: $border-radius-base;
+	border-top-right-radius: 0;
+}
+
+.input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child > .btn, .input-group-btn:first-child > .btn-group > .btn, .input-group-btn:first-child > .dropdown-toggle, .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: $border-radius-base;
+	border-top-left-radius: 0;
+	border-top-right-radius: $border-radius-base;
+}
+
+.input-group-addon:last-child {
+	border-right: 0;
+	border-left: 1px;
+}
+
+@media (min-width: 992px) {
+	.has-error .question-content-wrapper {
+		margin-right: 0;
+		margin-left: $padding-base-horizontal;
+	}
+}

@@ -1,0 +1,142 @@
+rules(
+    // hide hidden questions without sub-questions
+    on(
+        and(isObject,
+            pathStartsWith("questionnaire.questions"),
+            pathEndsWith("questions"),
+            has("questions").not(),
+            has("type", eq("label")).not(),
+            or(
+                and(
+                    and(has("assignedTo"), has("assignedTo", eq("Applicant"))),
+                    has("answerModification"),
+                    has("answerModification", has("source", eq("anonymous:Applicant").not())),
+                    has("tags"),
+                    has("tags", has("HideIfAnsweredByDifferentSource"))
+                ),
+                and(
+                    and(has("assignedTo"), has("assignedTo", eq("Applicant")).not()),
+                    or(has("tags").not(), has("tags", has("ShowEvenIfNotAssignedTo")).not())
+                )
+            )
+        )
+    ).then(remove),
+
+    // mark hidden questions with non-hidden sub-questions as virtual
+    on(
+        and(isObject,
+            pathStartsWith("questionnaire.questions"),
+            pathEndsWith("questions"),
+            has("questions"),
+            or(
+                and(
+                    and(has("assignedTo"), has("assignedTo", eq("Applicant"))),
+                    has("answerModification"),
+                    has("answerModification", has("source", eq("anonymous:Applicant").not())),
+                    has("tags"),
+                    has("tags", has("HideIfAnsweredByDifferentSource"))
+                ),
+                and(
+                    and(has("assignedTo"), has("assignedTo", eq("Applicant")).not()),
+                    or(has("tags").not(), has("tags", has("ShowEvenIfNotAssignedTo")).not())
+                )
+            )
+        )
+    ).then(
+        removeFieldWith(
+            and(
+                pathEndsWith("id").not(),
+                pathEndsWith("questions").not()
+            )
+        ),
+        setField("type", "virtual")
+    ),
+
+    // remove tag 'ShowEvenIfNotAssignedTo' when the applicant is the assignee
+	on(
+		and(
+			isObject,
+			pathStartsWith("questionnaire.questions"),
+			pathEndsWith("questions"),
+			and(has("assignedTo"),
+				has("assignedTo", eq("Applicant")),
+				has("tags"),
+				has("tags", has("ShowEvenIfNotAssignedTo")),
+				or(	has("initialAnswerByProductChange").not(),
+					has("initialAnswerByProductChange", eq(true)).not(),
+					and(has("initialAnswerByProductChange", eq(true)),
+						property("com.hannoverre.reflex.cep.util.initialAnswerByProductChangeReadOnly", "false"))
+				)
+			)
+		)
+	).then(removePath("tags.ShowEvenIfNotAssignedTo")),
+
+	// add tag 'ShowEvenIfNotAssignedTo' when its an initial answered question by product change and it readOnlyProperty is true
+ on(
+                and(
+                    isObject,
+                    pathStartsWith("questionnaire.questions"),
+                    pathEndsWith("questions"),
+                    has("tags", has("ShowEvenIfNotAssignedTo").not()),
+                    has("initialAnswerByProductChange", eq(true)),
+                    property("com.hannoverre.reflex.cep.util.initialAnswerByProductChangeReadOnly", "true")
+                )
+            ).then(setPath("tags.ShowEvenIfNotAssignedTo", true)),
+
+    // hide assessment result, provided block and assessment factors and ras internal data
+    on(
+        or(
+            path("results"),
+            path("provided"),
+            path("calculated"),
+            path("assessmentFactors"),
+            path("questionnaire.meta.ras"),
+            path("meta.cep.permissions"),
+            path("meta.cep.providedSubject"),
+            path("meta.ras.cedent"),
+            path("meta.ras.knowledgebase.cedent"),
+			path("questionnaire.meta.ras"),
+            path("links"),
+            path("completed"),
+            path("valid")
+        )
+    ).then(remove),
+
+    // hide empty groups
+    on(
+        and(isObject,
+            pathStartsWith("questionnaire.questions"),
+            pathEndsWith("questions"),
+            isArrayEmpty("questions"),
+            or(has("type", eq("group")),has("type", eq("assessment-factor-group")))
+        )
+    ).then(remove),
+
+    // hide answer modifications
+    on(
+        and(isObject,
+            pathStartsWith("questionnaire.questions"),
+            pathEndsWith("questions")
+        )
+    ).then(removeField("answerModification")),
+
+    // Remove links section from questions
+    on(
+       and(
+           pathStartsWith("questionnaire.questions"),
+           pathEndsWith("questions.links")
+       )
+    ).then(remove),
+
+    // Hide searchContextQuestions field from the user
+    on(
+        and(isObject,
+            pathStartsWith("questionnaire.questions"),
+            pathEndsWith("questions"),
+            has("searchContextQuestions", isArray)
+        )
+    ).then(
+        setPath("meta.cep.requiresSearchContextQuestions", true),
+        removeField("searchContextQuestions")
+    )
+)

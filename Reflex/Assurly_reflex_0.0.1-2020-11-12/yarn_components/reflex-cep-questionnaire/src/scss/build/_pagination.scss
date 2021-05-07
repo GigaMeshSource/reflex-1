@@ -1,0 +1,14 @@
+$floating-alert-shadow: 5px 5px 5px 0 rgba(0,0,0,.26) !default;
+
+.alert-sticky {
+	position: fixed;
+	bottom: 0;
+	z-index: 100;
+	box-shadow: $floating-alert-shadow;
+}
+
+.alert button.close {
+	margin-left: $padding-base-horizontal;
+	position: relative;
+	bottom: 2px;
+}

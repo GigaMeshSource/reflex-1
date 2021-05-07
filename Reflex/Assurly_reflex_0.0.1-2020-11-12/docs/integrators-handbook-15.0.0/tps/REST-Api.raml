@@ -1,0 +1,170 @@
+#%RAML 0.8
+---
+title: 3PS REST Adapter
+baseUri: http://localhost:8080/com.hannoverre.reflex.tps.rest.adapter
+version: 5.0.0
+securitySchemes:
+    - Basic Authentication:
+        description: |
+            The API's authentication relies on using Basic Access Authentication as described in RFC2617 [RFC2617]
+traits:
+  - secured:
+      usage: Apply this to any method that needs to be secured
+      description: Some requests require authentication.
+
+/check:
+    get:
+        description: Retrieve a simple answer for heartbeat checks in the monitoring
+        responses:
+            200:
+                body:
+                    text/plain:
+                        example: |
+                            Available (3PS REST adapter) - 2015-05-28T17:27:10.470+0200
+            405:
+                description: Method Not Allowed - The request to the specific resource uses a wrong HTTP method, e.g. POST instead of GET.
+                body:
+                    text/plain:
+            500:
+                description: Internal Server Error - Request is not processed due to internal server error.
+                body:
+                    text/plain:
+/acquireAndAnalyze:
+    is: [ secured ]
+    post:
+        description: Call the configured 3PS connector with the supplied data to make it acquire additional data and analyze it.
+        request:
+            body:
+                application/json:
+                    Input is a risk assessment in the format of RAS MiddleWare (RMW, RiskAssessment).
+        responses:
+            200:
+                body:
+                    application/json: 
+                        Returns a provided-data block with the new assessment factors and variables in the format of RAS MiddleWare (RMW, ProvidedDataBlock).
+            400:
+                description: Bad Request - The data passed to this resource is not valid, e.g. the data is syntactically invalid or required values are missing.
+                body:
+                    text/plain:
+            401:
+                description: Unauthorized - The request to the specific resource is due to authentication restriction not permitted.
+                body:
+                    text/plain:
+            405:
+                description: Method Not Allowed - The request to the specific resource uses a wrong HTTP method, e.g. GET instead of POST.
+                body:
+                    text/plain:
+            500:
+                description: Internal Server Error - Request is not processed due to internal server error.
+                body:
+                    text/plain:
+/analyze:
+    is: [ secured ]
+    post:
+        description: Call the configured 3PS connector with the supplied data to make it analyze it.
+        request:
+            body:
+                application/json:
+                    Input is a risk assessment in the format of RAS MiddleWare (RMW, RiskAssessment). It must include a provided data block with the data to be analyzed.
+        responses:
+            200:
+                body:
+                    application/json: 
+                        Returns a new provided-data block with the new assessment factors and variables in the format of RAS MiddleWare (RMW, ProvidedDataBlock).
+            400:
+                description: Bad Request - The data passed to this resource is not valid, e.g. the data is syntactically invalid or required values are missing.
+                body:
+                    text/plain:
+            401:
+                description: Unauthorized - The request to the specific resource is due to authentication restriction not permitted.
+                body:
+                    text/plain:
+            405:
+                description: Method Not Allowed - The request to the specific resource uses a wrong HTTP method, e.g. GET instead of POST.
+                body:
+                    text/plain:
+            500:
+                description: Internal Server Error - Request is not processed due to internal server error.
+                body:
+                    text/plain:
+/requirements:
+    is: [ secured ]
+    get:
+        description: Get the list of all required (mandatory) AssessmentVariables for calling the provider and analyzing it's responses
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                              "requiredAssessmentVariables" : [
+                                  "InsuredPerson.FirstName",
+                                  "InsuredPerson.LastName",
+                                  "InsuredPerson.Gender",
+                                  "InsuredPerson.BirthDate"
+                              ],
+                              "optionalAssessmentVariables" : [ ]
+                            }
+                    text/plain:
+                        example: |
+                            Configuration [requiredAssessmentVariables=[InsuredPerson.FirstName, InsuredPerson.LastName, InsuredPerson.Gender, InsuredPerson.BirthDate], optionalAssessmentVariables=[]]
+            401:
+                description: Unauthorized - The request to the specific resource is due to authentication restriction not permitted.
+                body:
+                    text/plain:
+            405:
+                description: Method Not Allowed - The request to the specific resource uses a wrong HTTP method, e.g. POST instead of GET.
+                body:
+                    text/plain:
+            500:
+                description: Internal Server Error - Request is not processed due to internal server error.
+                body:
+                    text/plain:
+/deliveries:
+    is: [ secured ]
+    get:
+        description: Get the list of all possibly returned AssessmentFactors and -Variables from the configured connector
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                              "assessmentFactors" : [{
+                                  "id" : "DummyFactor",
+                                  "category": "DUMMY"
+                              }],
+                              "assessmentVariables" : [
+                                  "DummyFactor.VariableOne",
+                                  "DummyFactor.VariableTwo"
+                              ]
+                            }
+            401:
+                description: Unauthorized - The request to the specific resource is due to authentication restriction not permitted.
+                body:
+                    text/plain:
+            405:
+                description: Method Not Allowed - The request to the specific resource uses a wrong HTTP method, e.g. POST instead of GET.
+                body:
+                    text/plain:
+            500:
+                description: Internal Server Error - Request is not processed due to internal server error.
+                body:
+                    text/plain:
+/version:
+    get:
+        description: Responds the version information of the deployed artifact set as build time (from pom.xml)
+        responses:
+            200:
+                body:
+                    text/plain:
+                        example: |
+                            5.0.0
+            405:
+                description: Method Not Allowed - The request to the specific resource uses a wrong HTTP method, e.g. POST instead of GET.
+                body:
+                    text/plain:
+            500:
+                description: Internal Server Error - Request is not processed due to internal server error.
+                body:
+                    text/plain:
