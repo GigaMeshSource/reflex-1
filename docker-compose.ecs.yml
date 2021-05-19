@@ -1,0 +1,5 @@
+version: '3.7'
+services:
+  reflex:
+    container_name: reflex
+    image: assurly/reflex
