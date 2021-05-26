@@ -12,7 +12,7 @@ services:
     volumes:
         - './Reflex/Assurly_reflex_0.0.1-2020-11-12/webapps/ras-web.war:/usr/local/tomcat/webapps/ras-web.war'
         - './Reflex/Assurly_reflex_0.0.1-2020-11-12/webapps/cep-core.war:/usr/local/tomcat/webapps/cep-core.war'
-        - './cep-ui-custom-1618520751706:/usr/local/tomcat/webapps/continue'
+        - './ui:/usr/local/tomcat/webapps/continue'
         - './Reflex/Assurly_reflex_0.0.1-2020-11-12/reflex-config:/usr/local/tomcat/reflex-config'
         - './heap.dump.dir:/heap.dump.dir'
 

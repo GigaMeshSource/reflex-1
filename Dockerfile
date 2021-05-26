@@ -16,7 +16,7 @@ ENV CATALINA_OPTS '-Xms512M -Xmx4096M -Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOf
 
 COPY ./Reflex/Assurly_reflex_0.0.1-2020-11-12/webapps/ras-web.war /usr/local/tomcat/webapps/
 COPY ./Reflex/Assurly_reflex_0.0.1-2020-11-12/webapps/cep-core.war /usr/local/tomcat/webapps/
-COPY ./cep-ui-custom-1618520751706 /usr/local/tomcat/webapps/continue
+COPY ./ui /usr/local/tomcat/webapps/continue
 COPY ./Reflex/Assurly_reflex_0.0.1-2020-11-12/reflex-config /usr/local/tomcat/reflex-config
 
 VOLUME /usr/local/tomcat/webapps
