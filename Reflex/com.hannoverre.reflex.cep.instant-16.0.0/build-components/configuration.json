@@ -1,0 +1,36 @@
+{
+    "defaultTranslation": "en",
+    "autoSubmit": "always",
+    "autoSaveEnabled": true,
+    "autoSaveInterval": 10000,
+    "backendTimeoutWarning": 5000,
+    "backendTimeout": 20000,
+    "minLettersForSearch": 2,
+	"showCheckboxKey": false,
+	"showParentValidations": true,
+
+    "blockingQuestionnaire": {
+        "backdrop": "questionnaire",
+        "spinner": true
+    },
+    "pagination": {
+        "freePagination": false,
+        "ignoreValidityOnBackwardsPagination": false,
+		"dismissAlertDelay": 10000
+    },
+	"questionAnnotation": {
+		"required": false,
+		"optional": "denote"
+	},
+    "api": {
+        "urlPrefix": "",
+        "assessmentService": {
+            "assessmentPath": "/cep-core/assessment",
+            "search": "/cep-core/search"
+        },
+        "documentServicePath": "/cep-service-document/documents"
+    },
+    "assessmentFactorGroups": {
+      "collapsiblesForSearchChildren": true
+    }
+}

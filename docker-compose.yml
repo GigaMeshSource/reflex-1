@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  reflex:
+    container_name: reflex
+    image: tomcat
+    ports:
+      - "80:8080"
+    environment:
+      REFLEX_CONFIG_ROOTDIR: '/usr/local/tomcat/reflex-config'
+      REFLEX_LOG_ROOTDIR: '/usr/local/tomcat/logs'
+      CATALINA_OPTS: '-Xms512M -Xmx4096M -Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/heap.dump.dir'
+    volumes:
+      - './Reflex/Assurly/webapps/ras-web.war:/usr/local/tomcat/webapps/ras-web.war'
+      - './Reflex/Assurly/webapps/cep-core.war:/usr/local/tomcat/webapps/cep-core.war'
+      - './cep-ui-custom-1606905004848:/usr/local/tomcat/webapps/continue'
+      - './Reflex/Assurly/reflex-config:/usr/local/tomcat/reflex-config'
+      - './heap.dump.dir:/heap.dump.dir'

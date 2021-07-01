@@ -1,0 +1,42 @@
+{
+    "language" : "en",
+    "provided" : {
+        "source": {
+            "id" : "11111111",
+            "type" : "ClientSystem",
+            "callbackUrl" : "monCallbackUrlChoisi"
+        },
+        "products": {
+            "Credit": {
+                "riders": {
+                    "TILACRider": {}
+                }
+            }
+        },
+        "data": {},
+        "links" : [ ],
+        "questionnaire": {
+            "ApplicationDate" : {
+                "answer" : "2020-04-24"
+            },
+            "Credit.InceptionDate" : {
+                "answer" : "2020-04-26"
+            },
+            "Credit.InsuranceSum" : {
+                "answer" : 200000
+            },
+            "PolicyDuration" : {
+                "answer" : 100
+            },
+            "InsuredPerson.Gender" : {
+                "answer" : "Female"
+            },
+            "InsuredPerson.DateOfBirth" : {
+                "answer" : "1980-08-23"
+            },
+            "InsuredPerson.IsSmoker" : {
+                "answer" : "No"
+            }
+        }
+    }
+}
