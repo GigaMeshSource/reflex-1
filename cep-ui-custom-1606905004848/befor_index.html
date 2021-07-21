@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="cleartype" content="on"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" href="style.css"/>
+	<script>
+		const data = {
+	  "language": "en",
+	  "provided": {
+		"source": {
+		  "id": "mySourceId",
+		  "type": "CustomerPortal",
+		  "callbackUrl": "localhost:8080/foo"
+		},
+		"products": {
+		  "LifeProduct": {
+			"riders": {
+			  "TPDOwnRider": {}
+			}
+		  }
+		},
+		"questionnaire": {
+		  "LifeProduct.InsuranceSum": {
+			"answer": "150000"
+		  },
+		  "LifeProduct.PolicyDuration": {
+			"answer": 20
+		  },
+		  "TPDOwnRider.InsuranceSum": {
+			"answer": 50000
+		  },
+		  "TPDOwnRider.PolicyDuration": {
+			"answer": 12
+		  },
+		  "InsuredPerson.DateOfBirth": {
+			"answer": "1980-01-01"
+		  }
+		},
+		"links": [
+		  {
+			"href": "/rs/knowledgebases/knowledgebase/versions/1-18-0-snapshot-20150730-0040/riskassessments",
+			"rel": [
+			  "process-riskassessments"
+			],
+			"method": "POST"
+		  },
+		  {
+			"href": "/rs/knowledgebases/knowledgebase/versions/1-18-0-snapshot-20150730-0040/products",
+			"rel": [
+			  "search-products"
+			],
+			"method": "GET"
+		  },
+		  {
+			"href": "/rs/knowledgebases/knowledgebase/versions/1-18-0-snapshot-20150730-0040/assessmentfactors",
+			"rel": [
+			  "search-assessmentfactors"
+			],
+			"method": "GET"
+		  }
+		],
+		"data": {}
+	  }
+	}
+			let DOMAIN_NAME="http://ec2-52-47-179-140.eu-west-3.compute.amazonaws.com"
+			function transformToAssocArray(prmstr) {
+				var params = {};
+				var prmarr = prmstr.split("&");
+				for (var i = 0; i < prmarr.length; i++) {
+					var tmparr = prmarr[i].split("=");
+					params[tmparr[0]] = tmparr[1];
+				}
+				return params;
+			}
+	
+			function getSearchParameters() {
+				var prmstr = window.location.search.substr(1);
+				return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+			}
+			var params = getSearchParameters();
+			if (true) {
+				let postUrl = `${DOMAIN_NAME}/cep-core/integration/`;
+				let apiKey = `assurly-b539f812-bee0-4068-8ab9-c46d9b03521a`;
+				var xhr = new XMLHttpRequest();
+				xhr.ontimeout = function (e) {
+					window.location.href="https://reflex-dev.web.app/error";
+				 };
+				xhr.open("POST", postUrl, true);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.setRequestHeader('X-Api-Key', apiKey);
+	
+				xhr.send(JSON.stringify(data));
+	
+				console.log('réussie');
+				xhr.onreadystatechange = () => {
+					console.log(xhr.readyState)
+					if (xhr.readyState === 4) {
+						console.log(xhr.response)
+						response = JSON.parse(xhr.response)
+
+						if(response.token){
+							console.log("Hello word", response)
+							//window.location.href="https://reflex-dev.web.app/finish";
+							//onclick="javascript:document.cookie='Authorization=Bearer%20' + document.getElementById('auth').value + '; path=/cep-core'; window.location.hash='!/assessment/' + document.getElementById('asid').value + '?lang=' + document.getElementById('lang').value;">
+							//document.cookie='Authorization=Bearer%20' + document.getElementById('auth').value + '; path=/cep-core/continue'; window.location.hash='!/assessment/' + document.getElementById('asid').value + '?lang=' + document.getElementById('lang').value;
+							document.cookie=`Authorization=Bearer%20${response.token}; path=/cep-core;`
+							window.location.hash=`!/assessment/${response.assessmentId}?lang=${response.language}`
+						}else{
+							console.log("Else!!!")
+							//window.location.href="https://reflex-dev.web.app/error";
+						}
+						}
+					if (xhr.status == 200) {
+						console.log("", xhr.responseType, xhr.responseText)
+					}
+					console.log("", xhr.responseType, xhr.responseText)
+				}
+			}
+		</script>
+</head>
+<body ng-app="instantCepApp">
+
+<!--[if lt IE 11]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+	your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- Place your own header here. -->
+
+<!-- start:delete this for production -->
+<!--div class="container well">
+	<h1>Welcome to your fresh CEP-instance</h1>
+	Please retrieve an authorization token and an assessment ID from the <code>cep-integration-service</code> via your portal back end and paste those values here.
+	In production mode, you should not navigate to this page but to the direct URL (including the assessment ID) directly. Please delete this section in production mode.
+	<br/>
+	<div class="row">
+		<div class="col-sm-6"><input type="text" class="form-control" id="auth" placeholder="Authorization Token"></div>
+		<div class="col-sm-4"><input type="text" class="form-control" id="asid" placeholder="Assessment-ID"></div>
+		<div class="col-sm-1"><input type="text" class="form-control" id="lang" placeholder="Language Code"></div>
+		<div class="col-sm-1">
+			<button class="btn btn-primary" type="button"
+					onclick="javascript:document.cookie='Authorization=Bearer%20' + document.getElementById('auth').value + '; path=/cep-core'; window.location.hash='!/assessment/' + document.getElementById('asid').value + '?lang=' + document.getElementById('lang').value;">
+				Go!
+			</button>
+		</div>
+	</div>
+</div-->
+<!-- end:delete -->
+
+
+
+
+
+<div class="container">
+	<div ng-view></div>
+</div>
+
+<!-- sources -->
+<script src="scripts.js" type="text/javascript"></script>
+
+<!-- assessment.html -->
+<script type="text/ng-template" id="views/assessment.html">
+	<form>
+		<cep-questionnaire assessment="assessment" assessment-id="assessmentId" assessment-role="applicant" pagination-mode="'QuestionGroup'" current-page-id="currentPageId">
+			<before>
+				<cep-question-reminder></cep-question-reminder>
+			</before>
+			<after>
+				<cep-submit-button submit-function="$parent.submitIfValid"></cep-submit-button>
+				<cep-questionnaire-legend></cep-questionnaire-legend>
+			</after>
+		</cep-questionnaire>
+	</form>
+</script>
+
+<!-- error page -->
+<script type="text/ng-template" id="views/error.html">
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" style="margin-top: 100px;">
+			<div class="alert alert-danger text-center" style="padding: 50px; padding-top: 25px;">
+				<h3>{{ error.headline | cepTranslate }}</h3>
+				{{ error.message | cepTranslate }}
+			</div>
+		</div>
+	</div>
+</script>
+
+</body>
+</html>
