@@ -10,42 +10,67 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<link rel="stylesheet" href="style.css"/>
 	<script>
-		const data = {
-	  "language": "fr",
-	  "provided": {
-		"source": {
-		  "id": "mySourceId",
-		  "type": "CustomerPortal",
-		  "callbackUrl": "localhost:8080/foo"
-		},
-		"products": {
-		  "LifeProduct": {
-			"riders": {
-			  "TPDOwnRider": {}
-			}
-		  }
-		},
-		"questionnaire": {
-		  "LifeProduct.InsuranceSum": {
-			"answer": "150000"
-		  },
-		  "LifeProduct.PolicyDuration": {
-			"answer": 20
-		  },
-		  "TPDOwnRider.InsuranceSum": {
-			"answer": 50000
-		  },
-		  "TPDOwnRider.PolicyDuration": {
-			"answer": 12
-		  },
-		  "InsuredPerson.DateOfBirth": {
-			"answer": "1980-01-01"
-		  }
-		},
-		"links": [],
-		"data": {}
-	  }
-	}
+const data = {
+    "language": "fr",
+    "provided": {
+        "source": {
+            "id": "J68886037",
+            "type": "ClientSystem",
+            "callbackUrl": "https://reflex-assurly.web.app/"
+        },
+        "products": {
+            "Credit": {
+            }
+        },
+        "data": {
+        },
+        "links": [
+        ],
+        "questionnaire": {
+            "ApplicationDate": {
+                "answer": "2021-5-5"
+            },
+            "Credit.InceptionDate": {
+                "answer": "2021-5-6"
+            },
+            "Credit.InsuranceSum": {
+                "answer": 150000.0
+            },
+            "TypeOfCredit": {
+                "answer": [
+                    "PropertyLoanPrincipalResidence"
+                ]
+            },
+            "PolicyDuration": {
+                "answer": 250
+            },
+            "InsuredPerson.IsSmoker": {
+                "answer": false
+            },
+            "InsuredPerson.FormAssurly_QSSHeight": {
+                "answer": 156.0
+            },
+            "InsuredPerson.FormAssurly_QSSWeight": {
+                "answer": 56.0
+            },
+            "FormAssurly_QSSOffWorkCurrently": {
+                "answer": false
+            },
+            "FormAssurly_QSSOffWorkMore21DaysPast5Years": {
+                "answer": false
+            },
+            "FormAssurly_QSSFollowMedicalTreatmentMore21DaysLast5Years": {
+                "answer": false
+            },
+            "FormAssurly_QSSStayAtHospitalLast5Years": {
+                "answer": false
+            },
+            "FormAssurly_QSSAggravatedCondition": {
+                "answer": false
+            }
+        }
+    }
+}
 			let DOMAIN_NAME="http://ec2-52-47-179-140.eu-west-3.compute.amazonaws.com"
 			function transformToAssocArray(prmstr) {
 				var params = {};
