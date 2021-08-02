@@ -44,7 +44,8 @@
                         console.log("200 status code with data: ", response)
                         //Set cookies
                         document.cookie=`Authorization=Bearer%20${response.body.data.wholeresponse.token}; path=/cep-core`;
-                        window.location.hash=`!/assessment/${response.body.data.wholeresponse.assessmentId}?lang=${response.body.data.wholeresponse.language}`;
+                        window.location.href=response.body.data.assurly.directUrl
+                        //window.location.hash=`!/assessment/${response.body.data.wholeresponse.assessmentId}?lang=${response.body.data.wholeresponse.language}`;
 
                     }else{
                         console.log("Manage else case")
