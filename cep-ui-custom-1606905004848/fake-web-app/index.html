@@ -43,8 +43,8 @@
                     if(response.statusCode==200){
                         console.log("200 status code with data: ", response)
                         //Set cookies
-                        document.cookie=`Authorization=Bearer%20${response.body.token}; path=/cep-core`;
-                        window.location.hash=response.body.data.assurly.directUrl;//`!/assessment/${response.assessmentId}?lang=${response.language}`;
+                        document.cookie=`Authorization=Bearer%20${response.body.wholeresponse.token}; path=/cep-core`;
+                        window.location.hash=`!/assessment/${response.body.wholeresponse.assessmentId}?lang=${response.body.wholeresponse.language}`;
 
                     }else{
                         console.log("Manage else case")
