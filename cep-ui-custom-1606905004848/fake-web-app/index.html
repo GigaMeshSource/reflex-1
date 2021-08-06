@@ -43,7 +43,7 @@
                     if(response.statusCode==200){
                         console.log("200 status code with data: ", response)
                         //Set cookies
-                        document.cookie=`Authorization=Bearer%20${response.body.data.wholeresponse.token}; path=/cep-core`;
+                        document.cookie=`Authorization=Bearer%20${response.body.data.wholeresponse.token}; path=/cep-core; samesite=none;secure=true`;
                         window.location.href=response.body.data.assurly.directUrl
                         //window.location.hash=`!/assessment/${response.body.data.wholeresponse.assessmentId}?lang=${response.body.data.wholeresponse.language}`;
 
