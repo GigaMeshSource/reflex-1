@@ -27,7 +27,7 @@
         }
         
         var params = getSearchParameters();
-        if (params.assessmentId && params.serverId && params.combinedServerId) {
+        if (params.assessmentId && params.serverId && params.combinedServerId && params.redirect_url && params.apikey) {
             let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/callback`;
             let apiKey = `assurly-b539f812-bee0-4068-8ab9-c46d9b03521a`;
             var xhr = new XMLHttpRequest();
@@ -39,7 +39,8 @@
                         console.log("200 status code with data: ", response)
                         //Set the message
                         //console.log("Reflex is done!!!")
-                        window.postMessage("Reflex is done!!!")
+                        window.location.href=`redirect_url=${params.redirect_url}&apikey=${params.apikey}&finish=okay`
+                        //window.postMessage("Reflex is done!!!")
 
                     }else{
                         console.log("Manage else case")
