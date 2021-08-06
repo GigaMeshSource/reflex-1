@@ -30,7 +30,7 @@
 
         var params = getSearchParameters();
 
-        if (params.serverId && params.combinedServerId) {
+        if (params.serverId && params.combinedServerId && params.redirect_url && params.apikey) {
             let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/gettoken`;
             var xhr = new XMLHttpRequest();
             xhr.ontimeout = function (e) {
@@ -61,6 +61,7 @@
                     body: {
                         "serverId": params.serverId,
                         "combinedServerId": params.combinedServerId,
+			"redirect_params":`redirect_url=${params.redirect_url}&apikey=${params.apikey}`,
                     }
                 }));
         }
