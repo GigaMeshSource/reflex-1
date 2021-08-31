@@ -27,7 +27,7 @@
         }
         
         var params = getSearchParameters();
-
+        console.log("Callback Params ", params)
         function manageCallback(assessmentId,serverId,combinedServerId){
             let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/callback`;
             var xhr = new XMLHttpRequest();
