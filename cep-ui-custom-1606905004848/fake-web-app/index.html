@@ -32,7 +32,7 @@
             return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
         }
 
-        function setReflexCookies(serverId, combinedServerId) {
+        function setReflexCookies(serverId, combinedServerId,redirect_url,api_key) {
             /***
              * Cette fonction recupere le token Reflex puis initialise les cookies pour 
              * generer le formulaire de Reflex
@@ -65,32 +65,32 @@
                     body: {
                         "serverId": serverId,
                         "combinedServerId":combinedServerId,
-                        "callback":""
+                        "callback":"",
+                        "redirect_params":`redirect_url=${redirect_url}&apikey=${api_key}`,
                     }
                 }));
 
         }
         var params = getSearchParameters();
-	console.log("Params ", params)
+        console.log("Params ", params)
         if (params.server_id_1 && params.combined_server_id_1) {
             /* Le cas ou le premier emprunteur est concerné */ 
             localStorage.setItem('params', JSON.stringify(params));
-            setReflexCookies(params.server_id_1, params.combined_server_id_1)
+            setReflexCookies(params.server_id_1, params.combined_server_id_1,params.redirect_url,params.apikey)
         }else if(params.server_id_2 && params.combined_server_id_2){
             //Le cas ou seul le second emprunteur est concerné
             localStorage.setItem('params', JSON.stringify(params));
-            setReflexCookies(params.server_id_2, params.combined_server_id_2)
+            setReflexCookies(params.server_id_2, params.combined_server_id_2,params.redirect_url,params.apikey)
         }else{
            // Verifier dans le localstorage generalement pour le second emprunteur
            if(localStorage.getItem("params")){
             var param = JSON.parse(localStorage.getItem("params"))
-            setReflexCookies(param.server_id_2, param.combined_server_id_2)
+            setReflexCookies(param.server_id_2, param.combined_server_id_2,param.redirect_url,param.apikey)
            }
         }
     </script>
 </head>
 <body ng-app="instantCepApp">
-
 
 <div class="container">
     <div class="row">
@@ -98,11 +98,12 @@
         <div class="col-sm-4"> EMPRUNTEUR N° 1</div>
         <div class="col-sm-4"></div>
     </div>
-	<div ng-view></div>
+    <div ng-view></div>
 </div>
-
 <!-- sources >
 <script src="scripts.js" type="text/javascript"></script>
+
+
 
 <assessment.html -->
 <script type="text/ng-template" id="views/assessment.html">
