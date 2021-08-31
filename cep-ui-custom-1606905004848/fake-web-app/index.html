@@ -12,8 +12,12 @@
     <script>
         let DOMAIN_NAME="https://ncpwtyy9z3.execute-api.eu-west-3.amazonaws.com/v15";
         let apiKey = `assurly-b539f812-bee0-4068-8ab9-c46d9b03521a`;
-        // https://ncpwtyy9z3.execute-api.eu-west-3.amazonaws.com/v15/
         function transformToAssocArray(prmstr) {
+            /**
+             *  Cette fonction recupere les parametres dans l'url et 
+             *  les convertie en un objet JSON
+             */
+
             var params = {};
             var prmarr = prmstr.split("&");
             for (var i = 0; i < prmarr.length; i++) {
@@ -28,24 +32,24 @@
             return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
         }
 
-        var params = getSearchParameters();
+        function setReflexCookies(serverId, combinedServerId) {
+            /***
+             * Cette fonction recupere le token Reflex puis initialise les cookies pour 
+             * generer le formulaire de Reflex
+             */
 
-        if (params.serverId && params.combinedServerId && params.redirect_url && params.apikey) {
             let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/gettoken`;
             var xhr = new XMLHttpRequest();
             xhr.ontimeout = function (e) {
                 console.log("Timeout exception: ", e)
-                //window.location.href="https://reflex-dev.web.app/error";
              };
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
                     response = JSON.parse(xhr.response)
                     if(response.statusCode==200){
                         console.log("200 status code with data: ", response)
-                        //Set cookies
                         document.cookie=`Authorization=Bearer%20${response.body.data.wholeresponse.token}; path=/cep-core`;
                         window.location.href=response.body.data.assurly.directUrl
-                        //window.location.hash=`!/assessment/${response.body.data.wholeresponse.assessmentId}?lang=${response.body.data.wholeresponse.language}`;
 
                     }else{
                         console.log("Manage else case")
@@ -59,37 +63,40 @@
             xhr.send(
                 JSON.stringify({
                     body: {
-                        "serverId": params.serverId,
-                        "combinedServerId": params.combinedServerId,
-			"redirect_params":`redirect_url=${params.redirect_url}&apikey=${params.apikey}`,
+                        "serverId": serverId,
+                        "combinedServerId":combinedServerId,
+                        "callback":""
                     }
                 }));
+
+        }
+        var params = getSearchParameters();
+        if (params.server_id_1 && params.combined_server_id_1) {
+            /* Le cas ou le premier emprunteur est concerné */ 
+            localStorage.setItem('params', JSON.stringify(params));
+            setReflexCookies(params.server_id_1, params.combined_server_id_1)
+        }else if(params.server_id_2 && params.combined_server_id_2){
+            //Le cas ou seul le second emprunteur est concerné
+            localStorage.setItem('params', JSON.stringify(params));
+            setReflexCookies(params.server_id_2, params.combined_server_id_2)
+        }else{
+           // Verifier dans le localstorage generalement pour le second emprunteur
+           if(localStorage.getItem("params")){
+            var param = JSON.parse(localStorage.getItem("params"))
+            setReflexCookies(param.server_id_2, param.combined_server_id_2)
+           }
         }
     </script>
 </head>
 <body ng-app="instantCepApp">
 
 
-<!--div-- class="container well">
-	<h1>Welcome to your fresh CEP-instance</h1>
-	Please retrieve an authorization token and an assessment ID from the <code>cep-integration-service</code> via your portal back end and paste those values here.
-	In production mode, you should not navigate to this page but to the direct URL (including the assessment ID) directly. Please delete this section in production mode.
-	<br/>
-	<div class="row">
-		<div class="col-sm-6"><input type="text" class="form-control" id="auth" placeholder="Authorization Token"></div>
-		<div class="col-sm-4"><input type="text" class="form-control" id="asid" placeholder="Assessment-ID"></div>
-		<div class="col-sm-1"><input type="text" class="form-control" id="lang" placeholder="Language Code"></div>
-		<div class="col-sm-1">
-			<button class="btn btn-primary" type="button"
-					onclick="javascript:document.cookie='Authorization=Bearer%20' + document.getElementById('auth').value + '; path=/cep-core'; window.location.hash='!/assessment/' + document.getElementById('asid').value + '?lang=' + document.getElementById('lang').value;">
-				Go!
-			</button>
-		</div>
-	</div>
-</!--div-->
-<!-- end:delete -->
-
 <div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4"> EMPRUNTEUR N° 1</div>
+        <div class="col-sm-4"></div>
+    </div>
 	<div ng-view></div>
 </div>
 
@@ -122,4 +129,3 @@
 
 </body>
 </html>
-
