@@ -71,6 +71,7 @@
 
         }
         var params = getSearchParameters();
+	console.log("Params ", params)
         if (params.server_id_1 && params.combined_server_id_1) {
             /* Le cas ou le premier emprunteur est concerné */ 
             localStorage.setItem('params', JSON.stringify(params));
