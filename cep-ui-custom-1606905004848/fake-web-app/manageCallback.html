@@ -73,7 +73,7 @@
                  if(param.hasOwnProperty("server_id_2") && param.hasOwnProperty("combined_server_id_2")){
                    //Redirection vers le formulaire Reflex du deuxieme emprunteur
                    console.log("Redirection vers le formulaire Reflex du deuxieme emprunteur")
-                   window.location.href=`ec2-35-180-119-217.eu-west-3.compute.amazonaws.com/continue/fake-web-app/`
+                   window.location.href=`http://ec2-35-180-119-217.eu-west-3.compute.amazonaws.com/continue/fake-web-app/`
                  }else{
                     window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}`
                  }
