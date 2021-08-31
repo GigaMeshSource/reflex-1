@@ -27,7 +27,7 @@
         }
         
         var params = getSearchParameters();
-        console.log("Callback Params ", params)
+
         function manageCallback(assessmentId,serverId,combinedServerId){
             let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/callback`;
             var xhr = new XMLHttpRequest();
@@ -63,19 +63,23 @@
 
         if (params.assessmentId && params.serverId && params.combinedServerId && params.redirect_url && params.apikey) {
             if(localStorage.getItem("params")){
+            console.log("There some thing in the storage")
             var param = JSON.parse(localStorage.getItem("params"))
-
+            console.log("There some thing in the storage", param)
             if(params.serverId==param.server_id_1 && params.combinedServerId==param.combined_server_id_1){
                  // Gerer la callback du premier emprunteur
+                 console.log("Gerer la callback du premier emprunteur")
                  manageCallback(params.assessmentId,params.serverId,params.combinedServerId)
                  if(param.hasOwnProperty("server_id_2") && param.hasOwnProperty("combined_server_id_2")){
                    //Redirection vers le formulaire Reflex du deuxieme emprunteur
-                   window.locationbar.href=`ec2-35-180-119-217.eu-west-3.compute.amazonaws.com/continue/fake-web-app/`
+                   console.log("Redirection vers le formulaire Reflex du deuxieme emprunteur")
+                   window.location.href=`ec2-35-180-119-217.eu-west-3.compute.amazonaws.com/continue/fake-web-app/`
                  }else{
                     window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}`
                  }
             }else if(params.serverId==param.server_id_2 && params.combinedServerId==param.combined_server_id_2){
                 // Gerer la callback du second emprunteur
+                console.log("Gerer la callback du second emprunteur")
                 manageCallback(params.assessmentId,params.serverId,params.combinedServerId)
                 window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}` //Fin du process redirection vers la webapp
             }
