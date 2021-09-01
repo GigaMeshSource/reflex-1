@@ -2,7 +2,7 @@ version: '3.7'
 services:
   reflex:
     container_name: reflex
-    image: tomcat
+    image: tomcat:9.0.48-jdk8-openjdk-slim-buster
     ports:
       - "80:8080"
     environment:
