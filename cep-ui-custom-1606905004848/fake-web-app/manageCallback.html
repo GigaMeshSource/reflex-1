@@ -27,7 +27,13 @@
         }
         
         var params = getSearchParameters();
-
+        function json2KeyValueString(data){
+            var key_value_string=""
+            Object.keys(data).forEach(function(key) {
+                key_value_string =`${key_value_string}&${key}=${data[key]}`;
+            });
+         return key_value_string
+        }
         function manageCallback(assessmentId,serverId,combinedServerId){
             let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/callback`;
             var xhr = new XMLHttpRequest();
@@ -75,13 +81,16 @@
                    console.log("Redirection vers le formulaire Reflex du deuxieme emprunteur")
                    window.location.href=`http://ec2-35-180-119-217.eu-west-3.compute.amazonaws.com/continue/fake-web-app/`
                  }else{
-                    window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}`
+                    //json2KeyValueString(data)
+                    //window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}`
+                    window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay${json2KeyValueString(param)}`
                  }
             }else if(params.serverId==param.server_id_2 && params.combinedServerId==param.combined_server_id_2){
                 // Gerer la callback du second emprunteur
                 console.log("Gerer la callback du second emprunteur")
                 manageCallback(params.assessmentId,params.serverId,params.combinedServerId)
-                window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}` //Fin du process redirection vers la webapp
+                //window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}` //Fin du process redirection vers la webapp
+                window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay${json2KeyValueString(param)}` //Fin du process redirection vers la webapp
             }
             
            }
