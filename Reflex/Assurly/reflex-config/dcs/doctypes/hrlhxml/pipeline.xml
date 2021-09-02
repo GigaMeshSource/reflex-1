@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:dcs="http://www.hannover-re.com/dcs/schema/pipeline"
+      xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.hannover-re.com/dcs/schema/pipeline http://www.hannover-re.com/dcs/schema/pipeline/pipeline.xsd">
+
+   <dcs:pipeline id="hrlhxml">
+     <dcs:jsonToXml/>
+     <dcs:xslTransformation styleSheet="cspJsonXmlToIntermediateXml.xslt"/>
+     <dcs:xslTransformation styleSheet="intermediateXmlToXml.xslt"/>
+   </dcs:pipeline>
+
+</beans>

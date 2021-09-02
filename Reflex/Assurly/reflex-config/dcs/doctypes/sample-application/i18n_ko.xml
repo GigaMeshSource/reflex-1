@@ -1,0 +1,27 @@
+<i18n language="ko">
+  <text id="fo.font-family">ArialUnicodeMS</text>
+  <text id="fo.script">auto</text>
+  <text id="fo.language">none</text>
+  <text id="fo.writing-mode">lr-tb</text>
+  <text id="title">개요</text>
+  <text id="footer.pageNoPrefix">페이지 </text>
+  <text id="footer.pageNoInfix"> 의 </text>
+  <text id="footer.pageNoPostfix"></text>
+  <text id="address.title">응모자</text>
+  <text id="questionnaire.title">질문 사항</text>
+  <text id="assessment.result.title">평가 결과</text>
+  <text id="result.product.title">보험 상품</text>
+  <text id="result.decision.title">결정</text>
+  <text id="result.decision.details.title">세부</text>
+  <text id="result.decision.details.EMLoading">Medical loading: </text>
+  <text id="result.decision.details.AncillaryEMLoading">Other loading: </text>
+  <text id="result.decision.details.FlatExtraLoading">Flat extra loading: </text>
+  <text id="result.decision.details.Text"></text>
+  <text id="result.decision.details.Exclusion"></text>
+  <text id="result.decision.reasons.title">이유</text>
+  <text id="result.cover.title">보험 커버</text>
+  <text id="result.rider.title">추가 커버</text>
+  <text id="productDetails.title">선택한 보험</text>
+  <text id="productDetails.product.title">주요 보험</text>
+  <text id="productDetails.riders.title">추가 보험 커버</text>
+</i18n>

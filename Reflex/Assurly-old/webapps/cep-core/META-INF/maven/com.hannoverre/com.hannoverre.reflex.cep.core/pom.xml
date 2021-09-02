@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://maven.apache.org/POM/4.0.0"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>com.hannoverre.reflex.cep.parent</artifactId>
+		<groupId>com.hannoverre</groupId>
+		<version>16.0.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>com.hannoverre.reflex.cep.core</artifactId>
+	<name>ReFlex CEP REST Core</name>
+	<description>ReFlex CEP Services providing the CEP REST API</description>
+	<packaging>war</packaging>
+
+	<dependencies>
+
+		<!-- Reflex commons -->
+		<dependency>
+			<groupId>com.hannoverre</groupId>
+			<artifactId>com.hannoverre.reflex.common.web.boot</artifactId>
+		</dependency>
+
+		<!-- ReFlex CEP -->
+		<dependency>
+			<groupId>com.hannoverre</groupId>
+			<artifactId>com.hannoverre.reflex.cep.service.assessment</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.hannoverre</groupId>
+			<artifactId>com.hannoverre.reflex.cep.service.integration</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.hannoverre</groupId>
+			<artifactId>com.hannoverre.reflex.cep.service.document</artifactId>
+		</dependency>
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<!-- ReFlex components are delivered as WARs. Embedded Tomcat should not be bundled. -->
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+		</dependency>
+		<!-- SSS-2882: bundle logback GELF driver/connector -->
+		<dependency>
+			<groupId>biz.paluch.logging</groupId>
+			<artifactId>logstash-gelf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.hannoverre</groupId>
+			<artifactId>com.hannoverre.reflex.cep.storage.test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>config</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+							<goal>build-info</goal>
+						</goals>
+						<configuration>
+							<executable>false</executable>
+							<time>off</time>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <properties>
+                <docker.imagename>cep-core</docker.imagename>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+							<execution>
+								<id>create-dockerfile-appserver</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/docker/appserver</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${basedir}/src/main/docker</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>**/Dockerfile</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <images>
+								<image>
+									<name>
+										${docker.hub.host}/cep/${docker.imagename}:${project.version}-${appServer}-${appServerVersion}-${javaEnvironment}-${javaVersionWithClassifier}-${osName}-${osVersion}
+									</name>
+									<build>
+										<!--<tags>-->
+										<!--<tag>${project.version}</tag>-->
+										<!--</tags>-->
+										<dockerFileDir>${basedir}/target/docker/appserver</dockerFileDir>
+										<assembly>
+											<descriptor>${basedir}/src/main/docker/assembly.xml</descriptor>
+										</assembly>
+									</build>
+								</image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="com/hannoverre/reflex/common/web/spring/boot/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+    
+    <!--<appender name="dcsGelfAppender" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">-->
+    <!--    <host>udp:localhost</host>-->
+    <!--    <port>12201</port>-->
+    <!--</appender>-->
+    
+    <root level="ERROR">
+        <appender-ref ref="FILE"/>
+        <!--<appender-ref ref="CONSOLE"/>-->
+    </root>
+</configuration>
