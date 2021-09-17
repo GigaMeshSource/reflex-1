@@ -76,18 +76,18 @@
         if (params.server_id_1 && params.combined_server_id_1) {
             /* Le cas ou le premier emprunteur est concerné */ 
             localStorage.setItem('params', JSON.stringify(params));
-            document.getElementById('id_emp').value="1";
+            document.getElementById('id_emp').innerHTML="1";
             setReflexCookies(params.server_id_1, params.combined_server_id_1,params.redirect_url,params.apikey)
         }else if(params.server_id_2 && params.combined_server_id_2){
             //Le cas ou seul le second emprunteur est concerné
             localStorage.setItem('params', JSON.stringify(params));
-	    document.getElementById('id_emp').value="2";
+	    document.getElementById('id_emp').innerHTML="2";
             setReflexCookies(params.server_id_2, params.combined_server_id_2,params.redirect_url,params.apikey)
         }else{
            // Verifier dans le localstorage generalement pour le second emprunteur
            if(localStorage.getItem("params")){
             var param = JSON.parse(localStorage.getItem("params"))
-	    document.getElementById('id_emp').value="2";
+	    document.getElementById('id_emp').innerHTML="2";
             setReflexCookies(param.server_id_2, param.combined_server_id_2,param.redirect_url,param.apikey)
            }
         }
