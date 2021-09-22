@@ -38,7 +38,8 @@
              * generer le formulaire de Reflex
              */
 
-            let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/gettoken`;
+            //let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/gettoken`;
+	    let postUrl = `${DOMAIN_NAME}/reflex/gettoken`;
             var xhr = new XMLHttpRequest();
             xhr.ontimeout = function (e) {
                 console.log("Timeout exception: ", e)
@@ -93,12 +94,12 @@
         }
     </script>
 </head>
-<body ng-app="instantCepApp">
-
+<body>
+<div class="col-sm-4"> EMPRUNTEUR N° <div id="id_emp"></div></div>
+<div ng-app="instantCepApp">
 <div class="container">
     <div class="row">
         <div class="col-sm-4"></div>
-	    <div class="col-sm-4"> EMPRUNTEUR N° <div id="id_emp"></div></div>
         <div class="col-sm-4"></div>
     </div>
     <div ng-view></div>
@@ -131,6 +132,6 @@
 		</div>
 	</div>
 </script>
-
+</div>
 </body>
 </html>
