@@ -10,6 +10,7 @@
 
         let DOMAIN_NAME="https://ncpwtyy9z3.execute-api.eu-west-3.amazonaws.com/v15";
         let apiKey = `assurly-b539f812-bee0-4068-8ab9-c46d9b03521a`;
+        let EC2_DOMAIN =`http://ec2-35-180-169-178.eu-west-3.compute.amazonaws.com`;
         
         function transformToAssocArray(prmstr) {
             var params = {};
@@ -35,7 +36,7 @@
          return key_value_string
         }
         function manageCallback(assessmentId,serverId,combinedServerId){
-            let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/callback`;
+            let postUrl = `${DOMAIN_NAME}/reflex/callback`;
             var xhr = new XMLHttpRequest();
 
             xhr.onreadystatechange = () => {
@@ -82,13 +83,13 @@
                      if(param.hasOwnProperty("server_id_2") && param.hasOwnProperty("combined_server_id_2")){
                        //Redirection vers le formulaire Reflex du deuxieme emprunteur
                        console.log("Redirection vers le formulaire Reflex du deuxieme emprunteur")
-                       window.location.href=`http://ec2-35-180-119-217.eu-west-3.compute.amazonaws.com/continue/fake-web-app/`
+                       window.location.href=`${EC2_DOMAIN}/continue/fake-web-app/`
                      }else{
                         //json2KeyValueString(data)
                         //window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}`
                         window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay${json2KeyValueString(param)}`
                      }
-                  },500)
+                  },800)
             }else if(params.serverId==param.server_id_2 && params.combinedServerId==param.combined_server_id_2){
                 // Gerer la callback du second emprunteur
                 console.log("Gerer la callback du second emprunteur")
@@ -96,7 +97,7 @@
                 //window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}` //Fin du process redirection vers la webapp
                 setTimeout(
                 window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay${json2KeyValueString(param)}` //Fin du process redirection vers la webapp
-                ,500)
+                ,800)
               }
             
            }
