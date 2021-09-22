@@ -82,7 +82,7 @@
         }else if(params.server_id_2 && params.combined_server_id_2){
             //Le cas ou seul le second emprunteur est concerné
             localStorage.setItem('params', JSON.stringify(params));
-	    document.getElementById('id_emp').innerHTML="2";
+	    //document.getElementById('id_emp').innerHTML="2";
             setReflexCookies(params.server_id_2, params.combined_server_id_2,params.redirect_url,params.apikey)
         }else{
            // Verifier dans le localstorage generalement pour le second emprunteur
