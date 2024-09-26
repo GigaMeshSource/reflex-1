@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: org.springframework.boot.loader.WarLauncher
+Start-Class: com.hannoverre.reflex.cep.core.CepApplication
+Spring-Boot-Version: 2.3.3.RELEASE
+Spring-Boot-Classes: WEB-INF/classes/
+Spring-Boot-Lib: WEB-INF/lib/
+

@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Assurly Reflex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <script>
+
+        let DOMAIN_NAME="https://ncpwtyy9z3.execute-api.eu-west-3.amazonaws.com/v15";
+        let apiKey = `assurly-b539f812-bee0-4068-8ab9-c46d9b03521a`;
+        let EC2_DOMAIN =`http://ec2-35-180-169-178.eu-west-3.compute.amazonaws.com`;
+        
+        function transformToAssocArray(prmstr) {
+            var params = {};
+            var prmarr = prmstr.split("&");
+            for (var i = 0; i < prmarr.length; i++) {
+                var tmparr = prmarr[i].split("=");
+                params[tmparr[0]] = tmparr[1];
+            }
+            return params;
+        }
+
+        function getSearchParameters() {
+            var prmstr = window.location.search.substr(1);
+            return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+        }
+        
+        var params = getSearchParameters();
+        function json2KeyValueString(data){
+            var key_value_string=""
+            Object.keys(data).forEach(function(key) {
+                key_value_string =`${key_value_string}&${key}=${data[key]}`;
+            });
+         return key_value_string
+        }
+        function manageCallback(assessmentId,serverId,combinedServerId){
+            let postUrl = `${DOMAIN_NAME}/reflex/callback`;
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    response = JSON.parse(xhr.response)
+                    if(response.statusCode==200){
+                        console.log("200 status code with data: ", response)
+                        //return true
+
+                    }else{
+                        console.log("Manage else case")
+                        //return false
+                    }
+                }
+                console.log("", xhr.responseType, xhr.responseText)
+            }
+
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-Api-Key', apiKey);
+
+            xhr.send(
+                JSON.stringify({
+                    body: {
+                        "assessmentId": assessmentId,
+                        "serverId": serverId,
+                        "combinedServerId": combinedServerId,
+                    }
+                }));
+        }
+
+        if (params.assessmentId && params.serverId && params.combinedServerId && params.redirect_url && params.apikey) {
+            if(localStorage.getItem("params")){
+            console.log("There some thing in the storage")
+            var param = JSON.parse(localStorage.getItem("params"))
+            console.log("There some thing in the storage", param)
+            if(params.serverId==param.server_id_1 && params.combinedServerId==param.combined_server_id_1){
+                 // Gerer la callback du premier emprunteur
+                 console.log("Gerer la callback du premier emprunteur")
+                 manageCallback(params.assessmentId,params.serverId,params.combinedServerId)
+                 setTimeout(
+                  ()=>{
+                      
+                     if(param.hasOwnProperty("server_id_2") && param.hasOwnProperty("combined_server_id_2")){
+                       //Redirection vers le formulaire Reflex du deuxieme emprunteur
+                       console.log("Redirection vers le formulaire Reflex du deuxieme emprunteur")
+                       window.location.href=`${EC2_DOMAIN}/continue/fake-web-app/`
+                     }else{
+                        //json2KeyValueString(data)
+                        //window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}`
+                        window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay${json2KeyValueString(param)}`
+                     }
+                  },800)
+            }else if(params.serverId==param.server_id_2 && params.combinedServerId==param.combined_server_id_2){
+                // Gerer la callback du second emprunteur
+                console.log("Gerer la callback du second emprunteur")
+                manageCallback(params.assessmentId,params.serverId,params.combinedServerId)
+                //window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay&combinedServerId=${params.combinedServerId}&serverId=${params.serverId}` //Fin du process redirection vers la webapp
+                setTimeout(
+                window.location.href=`${params.redirect_url}?apikey=${params.apikey}&finish=okay${json2KeyValueString(param)}` //Fin du process redirection vers la webapp
+                ,800)
+              }
+            
+           }
+        }
+    </script>
+    <style>
+        .loader {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10%;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #ffc202;
+            width: 100px;
+            height: 100px;
+            -webkit-animation: spin 2s linear infinite;
+            /* Safari */
+            animation: spin 2s linear infinite;
+        }
+        /* Safari */
+        
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .head_text {
+            font-weight: bold;
+            text-align: center;
+            font-size: 76px;
+            color: #5630a3;
+            padding-top: 35px;
+        }
+        
+        .message {
+            text-align: center;
+            font-size: 50px;
+            color: #19191a;
+            padding-top: 35px;
+        }
+        
+        body {
+            display: block;
+            margin: 15px;
+            font-family: 'poppins-bold', sans-serif !important;
+        }
+        
+        .image {
+            margin-top: 100px;
+            width: 900px;
+            height: auto;
+            align-items: center;
+        }
+        
+        @media screen and (max-width:940px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 57px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 45px;
+                color: #19191a;
+                padding-top: 35px;
+            }
+            .image {
+                margin-top: 70px;
+                width: 800px;
+                height: auto;
+                align-items: center;
+            }
+        }
+        
+        @media screen and (max-width:800px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 37px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 27px;
+                color: #19191a;
+                padding-top: 35px;
+            }
+            .image {
+                margin-top: 100px;
+                width: 570px;
+                height: auto;
+                align-items: center;
+            }
+        }
+        
+        @media screen and (max-width:500px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 27px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 19px;
+                color: #19191a;
+                padding-top: 35px;
+                font-weight: bold;
+            }
+            .image {
+                margin-top: 35px;
+                width: 400px;
+                height: auto;
+                align-items: center;
+            }
+        }
+        
+        @media screen and (max-width:425px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 22px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 17px;
+                color: #19191a;
+                padding-top: 35px;
+                font-weight: bold;
+            }
+            .image {
+                margin-top: 35px;
+                width: 350px;
+                height: auto;
+                align-items: center;
+            }
+        }
+        
+        @media screen and (max-width:360px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 17px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 13px;
+                color: #19191a;
+                padding-top: 35px;
+                font-weight: bold;
+            }
+            .image {
+                margin-top: 35px;
+                width: 250px;
+                height: auto;
+                align-items: center;
+            }
+            .loader {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10%;
+                border: 13px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 13px solid #ffc202;
+                width: 80px;
+                height: 80px;
+                -webkit-animation: spin 2s linear infinite;
+                /* Safari */
+                animation: spin 2s linear infinite;
+            }
+        }
+        
+        @media screen and (max-width:260px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 12px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 8px;
+                color: #19191a;
+                padding-top: 35px;
+                font-weight: bold;
+            }
+            .image {
+                margin-top: 35px;
+                width: 150px;
+                height: auto;
+                align-items: center;
+            }
+            .loader {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10%;
+                border: 10px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 10px solid #ffc202;
+                width: 60px;
+                height: 60px;
+                -webkit-animation: spin 2s linear infinite;
+                /* Safari */
+                animation: spin 2s linear infinite;
+            }
+        }
+        
+        @media screen and (max-width:163px) {
+            .head_text {
+                font-weight: bold;
+                text-align: center;
+                font-size: 9px;
+                color: #5630a3;
+                padding-top: 35px;
+            }
+            .message {
+                text-align: center;
+                font-size: 8px;
+                color: #19191a;
+                padding-top: 35px;
+                font-weight: bold;
+            }
+            .image {
+                margin-top: 30px;
+                width: 130px;
+                height: auto;
+                align-items: center;
+            }
+            .loader {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10%;
+                border: 10px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 10px solid #ffc202;
+                width: 40px;
+                height: 40px;
+                -webkit-animation: spin 2s linear infinite;
+                /* Safari */
+                animation: spin 2s linear infinite;
+            }
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            /*padding: 15px;*/
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <p class="head_text">PLUS QUE QUELQUES SECONDES</p>
+        </div>
+        <div>
+            <p class="message">Nous évaluons vos réponses pour vous donner le meilleur tarif!</p>
+        </div>
+        <div>
+            <!--div class="loader"></div-->
+        </div>
+        <div>
+            <center><img src="Reflex.png" class="image" /></center>
+        </div>
+    </div>
+</body>
+
+</html>

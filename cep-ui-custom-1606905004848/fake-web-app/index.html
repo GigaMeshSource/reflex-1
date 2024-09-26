@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="cleartype" content="on"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" href="style.css"/>
+    <script>
+        let DOMAIN_NAME="https://ncpwtyy9z3.execute-api.eu-west-3.amazonaws.com/v15";
+        let apiKey = `assurly-b539f812-bee0-4068-8ab9-c46d9b03521a`;
+        function transformToAssocArray(prmstr) {
+            /**
+             *  Cette fonction recupere les parametres dans l'url et 
+             *  les convertie en un objet JSON
+             */
+
+            var params = {};
+            var prmarr = prmstr.split("&");
+            for (var i = 0; i < prmarr.length; i++) {
+                var tmparr = prmarr[i].split("=");
+                params[tmparr[0]] = tmparr[1];
+            }
+            return params;
+        }
+
+        function getSearchParameters() {
+            var prmstr = window.location.search.substr(1);
+            return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+        }
+
+        function setReflexCookies(serverId, combinedServerId,redirect_url,api_key) {
+            /***
+             * Cette fonction recupere le token Reflex puis initialise les cookies pour 
+             * generer le formulaire de Reflex
+             */
+
+            //let postUrl = `${DOMAIN_NAME}/check-integrity/reflex-webapp-test/gettoken`;
+	    let postUrl = `${DOMAIN_NAME}/reflex/gettoken`;
+            var xhr = new XMLHttpRequest();
+            xhr.ontimeout = function (e) {
+                console.log("Timeout exception: ", e)
+             };
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    response = JSON.parse(xhr.response)
+                    if(response.statusCode==200){
+                        console.log("200 status code with data: ", response)
+                        document.cookie=`Authorization=Bearer%20${response.body.data.wholeresponse.token}; path=/cep-core`;
+                        window.location.href=response.body.data.assurly.directUrl
+
+                    }else{
+                        console.log("Manage else case")
+                    }
+                }
+                console.log("", xhr.responseType, xhr.responseText)
+            }
+            xhr.open("POST", postUrl, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-Api-Key', apiKey);
+            xhr.send(
+                JSON.stringify({
+                    body: {
+                        "serverId": serverId,
+                        "combinedServerId":combinedServerId,
+                        "callback":"",
+                        "redirect_params":`redirect_url=${redirect_url}&apikey=${api_key}`,
+                    }
+                }));
+
+        }
+        var params = getSearchParameters();
+        console.log("Params ", params)
+        if (params.server_id_1 && params.combined_server_id_1) {
+            /* Le cas ou le premier emprunteur est concerné */ 
+            localStorage.setItem('params', JSON.stringify(params));
+            //document.getElementById('id_emp').innerHTML="1";
+            setReflexCookies(params.server_id_1, params.combined_server_id_1,params.redirect_url,params.apikey)
+        }else if(params.server_id_2 && params.combined_server_id_2){
+            //Le cas ou seul le second emprunteur est concerné
+            localStorage.setItem('params', JSON.stringify(params));
+	    //document.getElementById('id_emp').innerHTML="2";
+            setReflexCookies(params.server_id_2, params.combined_server_id_2,params.redirect_url,params.apikey)
+        }else{
+           // Verifier dans le localstorage generalement pour le second emprunteur
+           if(localStorage.getItem("params")){
+            var param = JSON.parse(localStorage.getItem("params"))
+	    //document.getElementById('id_emp').innerHTML="2";
+            setReflexCookies(param.server_id_2, param.combined_server_id_2,param.redirect_url,param.apikey)
+           }
+        }
+    </script>
+</head>
+<body>
+<div class="col-sm-4"> EMPRUNTEUR N° <div id="id_emp"></div></div>
+<div ng-app="instantCepApp">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4"></div>
+    </div>
+    <div ng-view></div>
+</div>
+<!-- sources >
+<script src="scripts.js" type="text/javascript"></script>
+
+
+
+<assessment.html -->
+<script type="text/ng-template" id="views/assessment.html">
+	<form>
+		<cep-questionnaire assessment="assessment" assessment-id="assessmentId" assessment-role="applicant">
+			<after>
+				<cep-submit-button submit-function="$parent.submitIfValid"></cep-submit-button>
+				<cep-questionnaire-legend></cep-questionnaire-legend>
+			</after>
+		</cep-questionnaire>
+	</form>
+</script>
+
+<!-- error page -->
+<script type="text/ng-template" id="views/error.html">
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3" style="margin-top: 100px;">
+			<div class="alert alert-danger text-center" style="padding: 50px; padding-top: 25px;">
+				<h3>{{ error.headline | cepTranslate }}</h3>
+				{{ error.message | cepTranslate }}
+			</div>
+		</div>
+	</div>
+</script>
+</div>
+</body>
+</html>

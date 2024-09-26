@@ -1,0 +1,27 @@
+<i18n language="en">
+  <text id="fo.font-family">Helvetica, Arial, sans-serif</text>
+  <text id="fo.script">auto</text>
+  <text id="fo.language">none</text>
+  <text id="fo.writing-mode">lr-tb</text>
+  <text id="title">Summary</text>
+  <text id="footer.pageNoPrefix">Page </text>
+  <text id="footer.pageNoInfix"> of </text>
+  <text id="footer.pageNoPostfix"></text>
+  <text id="address.title">Applicant / Insured Person</text>
+  <text id="questionnaire.title">Questionnaire</text>
+  <text id="assessment.result.title">Assessment Results</text>
+  <text id="result.product.title">Product</text>
+  <text id="result.decision.title">Decision</text>
+  <text id="result.decision.details.title">Details</text>
+  <text id="result.decision.details.EMLoading">Medical loading: </text>
+  <text id="result.decision.details.AncillaryEMLoading">Other loading: </text>
+  <text id="result.decision.details.FlatExtraLoading">Flat extra loading: </text>
+  <text id="result.decision.details.Text"></text>
+  <text id="result.decision.details.Exclusion"></text>
+  <text id="result.decision.reasons.title">Reasons</text>
+  <text id="result.cover.title">Cover</text>
+  <text id="result.rider.title">Rider</text>
+  <text id="productDetails.title">Selected insurance cover</text>
+  <text id="productDetails.product.title">Main cover:</text>
+  <text id="productDetails.riders.title">Additional cover(s):</text>
+</i18n>

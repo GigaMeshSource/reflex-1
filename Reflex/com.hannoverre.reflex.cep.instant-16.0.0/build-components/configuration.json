@@ -1,6 +1,6 @@
 {
     "defaultTranslation": "en",
-    "autoSubmit": "reflexive",
+    "autoSubmit": "always",
     "autoSaveEnabled": true,
     "autoSaveInterval": 10000,
     "backendTimeoutWarning": 5000,

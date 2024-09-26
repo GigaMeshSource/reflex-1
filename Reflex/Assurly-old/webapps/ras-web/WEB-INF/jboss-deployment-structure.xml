@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+
+    <deployment>
+        <exclude-subsystems>
+            <subsystem name="datasources" />
+            <subsystem name="ejb3" />
+            <subsystem name="infinispan" />
+            <subsystem name="jaxrs" />
+            <subsystem name="jca" />
+            <subsystem name="jpa" />
+            <subsystem name="jsf" />
+            <subsystem name="mail" />
+            <subsystem name="resteasy" />
+            <subsystem name="weld" />
+        </exclude-subsystems>
+        <exclusions>
+            <module name="com.google.guava" />
+        </exclusions>
+    </deployment>
+
+</jboss-deployment-structure>

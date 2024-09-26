@@ -1,0 +1,27 @@
+ing.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="dcsFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d{ISO8601} %-5p [%t] %c - %m%n</pattern>
+        </encoder>
+        <file>${REFLEX_LOG_ROOTDIR}/dcs.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>dcs.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--<appender name="dcsGelfAppender" class="biz.paluch.logging.gelf.logback.GelfLogbackAppender">-->
+    <!--    <host>udp:localhost</host>-->
+    <!--    <port>12201</port>-->
+    <!--</appender>-->
+
+    <root level="error">
+        <appender-ref ref="dcsFileAppender"/>
+    </root>
+</configuration>

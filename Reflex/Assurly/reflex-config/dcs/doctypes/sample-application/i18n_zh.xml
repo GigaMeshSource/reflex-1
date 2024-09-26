@@ -1,0 +1,27 @@
+<i18n language="ja">
+  <text id="fo.font-family">ArialUnicodeMS</text>
+  <text id="fo.script">auto</text>
+  <text id="fo.language">none</text>
+  <text id="fo.writing-mode">lr-tb</text>
+  <text id="title">总结</text>
+  <text id="footer.pageNoPrefix">第 </text>
+  <text id="footer.pageNoInfix"> 页 </text>
+  <text id="footer.pageNoPostfix"></text>
+  <text id="address.title">申请人</text>
+  <text id="questionnaire.title">调查问卷</text>
+  <text id="assessment.result.title">评估结果</text>
+  <text id="result.product.title">保险产品</text>
+  <text id="result.decision.title">决策</text>
+  <text id="result.decision.details.title">详细信息</text>
+  <text id="result.decision.details.EMLoading">Medical loading: </text>
+  <text id="result.decision.details.AncillaryEMLoading">Other loading: </text>
+  <text id="result.decision.details.FlatExtraLoading">Flat extra loading: </text>
+  <text id="result.decision.details.Text"></text>
+  <text id="result.decision.details.Exclusion"></text>
+  <text id="result.decision.reasons.title">原因</text>
+  <text id="result.cover.title">保险</text>
+  <text id="result.rider.title">其他保险</text>
+  <text id="productDetails.title">选择保险</text>
+  <text id="productDetails.product.title">主要保险</text>
+  <text id="productDetails.riders.title">其他保险承保</text>
+</i18n>

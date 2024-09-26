@@ -1,0 +1,27 @@
+<i18n language="fr">
+  <text id="fo.font-family">Helvetica, Arial, sans-serif</text>
+  <text id="fo.script">auto</text>
+  <text id="fo.language">none</text>
+  <text id="fo.writing-mode">lr-tb</text>
+  <text id="title">Résumé</text>
+  <text id="footer.pageNoPrefix"></text>
+  <text id="footer.pageNoInfix"> / </text>
+  <text id="footer.pageNoPostfix"></text>
+  <text id="address.title">Personne assurée</text>
+  <text id="questionnaire.title">Questionnaire</text>
+  <text id="assessment.result.title">Résultat de l'évaluation</text>
+  <text id="result.product.title">Produit</text>
+  <text id="result.decision.title">Décision</text>
+  <text id="result.decision.details.title">Détails</text>
+  <text id="result.decision.details.EMLoading">Majoration: </text>
+  <text id="result.decision.details.AncillaryEMLoading">Autre chargement: </text>
+  <text id="result.decision.details.FlatExtraLoading">Majoration: </text>
+  <text id="result.decision.details.Text"></text>
+  <text id="result.decision.details.Exclusion"></text>
+  <text id="result.decision.reasons.title">Raisons</text>
+  <text id="result.cover.title">Couverture d'assurance</text>
+  <text id="result.rider.title">Garantie complementaire</text>
+  <text id="productDetails.title">Détails du produit</text>
+  <text id="productDetails.product.title">Couverture d'assurance:</text>
+  <text id="productDetails.riders.title">Garantie supplémentaire:</text>
+</i18n>

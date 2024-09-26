@@ -1,0 +1,27 @@
+<i18n language="ru">
+  <text id="fo.font-family">DejaVuSans</text>
+  <text id="fo.script">auto</text>
+  <text id="fo.language">none</text>
+  <text id="fo.writing-mode">lr-tb</text>
+  <text id="title">Резюме</text>
+  <text id="footer.pageNoPrefix">Страница </text>
+  <text id="footer.pageNoInfix"> из </text>
+  <text id="footer.pageNoPostfix"></text>
+  <text id="address.title">заявитель</text>
+  <text id="questionnaire.title">анкета</text>
+  <text id="assessment.result.title">результаты оценки</text>
+  <text id="result.product.title">продукт</text>
+  <text id="result.decision.title">решение</text>
+  <text id="result.decision.details.title">подробности</text>
+  <text id="result.decision.details.EMLoading">Medical loading: </text>
+  <text id="result.decision.details.AncillaryEMLoading">Other loading: </text>
+  <text id="result.decision.details.FlatExtraLoading">Flat extra loading: </text>
+  <text id="result.decision.details.Text"></text>
+  <text id="result.decision.details.Exclusion"></text>
+  <text id="result.decision.reasons.title">Причины</text>
+  <text id="result.cover.title">Обложка</text>
+  <text id="result.rider.title">всадник</text>
+  <text id="productDetails.title">Выбранные страхование</text>
+  <text id="productDetails.product.title">Основная крышка:</text>
+  <text id="productDetails.riders.title">дополнительные чехлы:</text>
+</i18n>
